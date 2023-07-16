@@ -52,3 +52,10 @@ model Leave_request {
   status              String
   employee            Employee @relation(fields: [employeeId], references: [id])
 }
+
+model Public_holidays {
+  id      Int      @id @default(autoincrement())
+  country String
+  name    String
+  date    DateTime
+}

@@ -10,5 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^5.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.1.6"
   }
 }

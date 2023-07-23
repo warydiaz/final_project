@@ -49,7 +49,7 @@ export default function Page() {
           />
         </label>
         <button className="bg-stone-200 py-1 px-3 rounded" onClick={singIn}>
-          Signin
+          Sign-in
         </button>
       </form>
       {errMsg && <div className="text-red-600 font-bold">{errMsg}</div>}

@@ -13,8 +13,8 @@ export default function Page() {
 
   const singIn = async () => {
     const { error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
+      email,
+      password,
     });
     if (error) {
       setErrMsg(error.toString());
@@ -49,7 +49,7 @@ export default function Page() {
           />
         </label>
         <button className="bg-stone-200 py-1 px-3 rounded" onClick={singIn}>
-          Sigin
+          Signin
         </button>
       </form>
       {errMsg && <div className="text-red-600 font-bold">{errMsg}</div>}

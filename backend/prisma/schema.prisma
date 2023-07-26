@@ -15,6 +15,7 @@ model Sector {
 
 model Employee {
   id                Int               @id @default(autoincrement())
+  userId            String            @unique
   name              String
   document_type     Int
   document_number   String

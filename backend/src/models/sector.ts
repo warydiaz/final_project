@@ -3,6 +3,7 @@ export default class Sector {
   public name: string;
 
   constructor(name: string) {
+    this.id = undefined;
     this.name = name;
   }
 

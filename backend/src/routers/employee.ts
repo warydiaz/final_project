@@ -1,21 +1,35 @@
 import { Request, Router } from "express";
-import prisma from "../db/prisma-client.js";
+import { EmployeeServices } from "../services/employeeServices.js";
+import { EmployeeServicesImp } from "../services/employeeServicesImp.js";
 import { errorChecked } from "../utils.js";
+import { Employee } from "../models/employee.js";
 
 const router = Router();
+const employeeServicesQuery: EmployeeServices = new EmployeeServicesImp();
 
 router.get(
   "/",
   errorChecked(async (req, res) => {
-    const result = await prisma.employee.findMany({});
+    const result = await employeeServicesQuery.getAllEmployee();
     res.status(200).json({ employee: result, ok: true });
   })
 );
 
 router.post(
-  "/",
+  "/",  
   errorChecked(async (req, res) => {
-    const newEmployee = await prisma.employee.create({ data: req.body });
+    const employeeData = req.body
+    const anEmployee: Employee = new Employee(
+      employeeData.userId,
+      employeeData.name,
+      employeeData.document_type,
+      employeeData.document_number,
+      employeeData.current_hours_off,
+      employeeData.position_name,
+      employeeData.employee_Sector,
+      employeeData.holidays_type
+    );
+    const newEmployee = await employeeServicesQuery.createAEmployee(anEmployee);
     res.status(200).json({ newEmployee, ok: true });
   })
 );
@@ -35,9 +49,7 @@ router.use("/:id", async (req: RequestWithEmployeeId, res, next) => {
 router.get(
   "/:id",
   errorChecked(async (req: RequestWithEmployeeId, res) => {
-    const employee = await prisma.employee.findUniqueOrThrow({
-      where: { id: req.employeeId },
-    });
+    const employee = await employeeServicesQuery.getAEmployee(req.employeeId)
     res.status(200).json(employee);
   })
 );
@@ -45,10 +57,7 @@ router.get(
 router.put(
   "/:id",
   errorChecked(async (req: RequestWithEmployeeId, res) => {
-    const updatedEmployee = await prisma.employee.update({
-      where: { id: req.employeeId },
-      data: req.body,
-    });
+    const updatedEmployee = await employeeServicesQuery.updateAEmployee(req.employeeId, req.body);
     res.status(200).json(updatedEmployee);
   })
 );
@@ -56,9 +65,7 @@ router.put(
 router.delete(
   "/:id",
   errorChecked(async (req: RequestWithEmployeeId, res) => {
-    const deletedEmployee = await prisma.employee.delete({
-      where: { id: req.employeeId },
-    });
+    const deletedEmployee = await employeeServicesQuery.deleteAEmployee(req.employeeId)
     res.status(200).json(deletedEmployee);
   })
 );

@@ -20,14 +20,14 @@ router.post(
   errorChecked(async (req, res) => {
     const employeeData = req.body
     const anEmployee: Employee = new Employee(
-      employeeData.userId,
+      employeeData.userid,
       employeeData.name,
       employeeData.document_type,
       employeeData.document_number,
       employeeData.current_hours_off,
       employeeData.position_name,
       employeeData.employee_Sector,
-      employeeData.holidays_type
+      employeeData.holidays_typeId
     );
     const newEmployee = await employeeServicesQuery.createAEmployee(anEmployee);
     res.status(200).json({ newEmployee, ok: true });

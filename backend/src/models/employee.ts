@@ -33,4 +33,19 @@ export class Employee {
   public setId(id: number): void {
     this.id = id;
   }
+
+  public getObjEmployee(): any{
+    const anEmployee = {
+      "userid": this.userId,
+      "name": this.name,
+      "document_type": this.document_type,
+      "document_number": this.document_number,
+      "current_hours_off": this.current_hours_off,
+      "position_name": this.position_name,
+      "employee_Sector": this.employee_Sector,
+      "holidays_typeId": this.holidays_type
+    };
+    return anEmployee;
+  }
+
 }

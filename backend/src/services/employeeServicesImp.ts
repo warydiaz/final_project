@@ -88,7 +88,7 @@ export class EmployeeServicesImp implements EmployeeServices {
     try {
       const { data, error }: PostgrestResponse<Employee> = await supabase
         .from("Employee")
-        .insert([employee]);
+        .insert([employee.getObjEmployee()]);
 
       if (error) {
         console.error(`Error inserting Employee:`, error);

@@ -88,14 +88,14 @@ export class SectorServicesImp implements SectorServices {
     try {
       const { data, error }: PostgrestResponse<Sector> = await supabase
         .from("Sector")
-        .insert([sector]);
+        .insert([sector.getObjSector()]);
 
       if (error) {
         console.error(`Error inserting Sector:`, error);
-        return data.length ? data[0] : null;
+        return null;
       } else {
         console.log(`Sector inserted successfully.`);
-        return null;
+        return data.length ? data[0] : null;
       }
     } catch (error) {
       console.error(`Error inserting Sector:`, error);

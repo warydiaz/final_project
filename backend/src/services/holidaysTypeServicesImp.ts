@@ -9,7 +9,7 @@ export class HolidaysTypeServicesImp implements HolidaysTypeServices {
   public getAllHolidaysType = async (): Promise<HolidaysType[]> => {
     try {
       const { data, error }: PostgrestResponse<HolidaysType[]> = await supabase
-        .from("Holidays_Type")
+        .from("Holidays_type")
         .select("*");
 
       if (error) {
@@ -27,7 +27,7 @@ export class HolidaysTypeServicesImp implements HolidaysTypeServices {
   public getAHolidaysType = async (id: Number): Promise<HolidaysType | null> => {
     try {
       const { data, error }: PostgrestResponse<HolidaysType> = await supabase
-        .from("Holidays_Type")
+        .from("Holidays_type")
         .select("*")
         .eq("id", id);
 
@@ -46,7 +46,7 @@ export class HolidaysTypeServicesImp implements HolidaysTypeServices {
   public deleteAHolidaysType = async (id: number): Promise<boolean> => {
     try {
       const { data, error }: PostgrestResponse<unknown> = await supabase
-        .from("Holidays_Type")
+        .from("Holidays_type")
         .delete()
         .eq("id", id);
 
@@ -68,7 +68,7 @@ export class HolidaysTypeServicesImp implements HolidaysTypeServices {
   ): Promise<boolean> => {
     try {
       const { data, error }: PostgrestResponse<unknown> = await supabase
-        .from("Holidays_Type")
+        .from("Holidays_type")
         .update(updatedData)
         .eq("id", id);
 
@@ -84,18 +84,18 @@ export class HolidaysTypeServicesImp implements HolidaysTypeServices {
     }
   };
 
-  public createAHolidaysType = async (HolidaysType: HolidaysType): Promise<HolidaysType> => {
+  public createAHolidaysType = async (holidaysType: HolidaysType): Promise<HolidaysType> => {
     try {
       const { data, error }: PostgrestResponse<HolidaysType> = await supabase
-        .from("Holidays_Type")
-        .insert([HolidaysType]);
+        .from("Holidays_type")
+        .insert([holidaysType.getObjHolidays_type()]);
 
       if (error) {
         console.error(`Error inserting HolidaysType:`, error);
-        return data.length ? data[0] : null;
+        return null;
       } else {
         console.log(`HolidaysType inserted successfully.`);
-        return null;
+        return data.length ? data[0] : null;
       }
     } catch (error) {
       console.error(`Error inserting HolidaysType:`, error);

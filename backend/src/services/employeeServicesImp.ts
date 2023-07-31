@@ -92,10 +92,10 @@ export class EmployeeServicesImp implements EmployeeServices {
 
       if (error) {
         console.error(`Error inserting Employee:`, error);
-        return data.length ? data[0] : null;
+        return null;
       } else {
         console.log(`Employee inserted successfully.`);
-        return null;
+        return data.length ? data[0] : null;
       }
     } catch (error) {
       console.error(`Error inserting Employee:`, error);

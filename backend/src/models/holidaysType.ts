@@ -14,4 +14,13 @@ export default class Holidays_type {
   public setId(id: number): void {
     this.id = id;
   }
+
+  public getObjHolidays_type(): any{
+    const aHolidays_type = {
+      "name": this.name,
+      "amount_of_days_off": this.amount_of_days_off,
+      "country": this.country
+    };
+    return aHolidays_type;
+  }
 }

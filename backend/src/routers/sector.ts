@@ -25,13 +25,13 @@ router.post(
   })
 );
 
-export interface RequestWithEmployeeId extends Request {
+export interface RequestWithSectorId extends Request {
     params: { id: any; };
     body: any;
     sectorId: number;
 }
 
-router.use("/:id", async (req: RequestWithEmployeeId, res, next) => {
+router.use("/:id", async (req: RequestWithSectorId, res, next) => {
   const { id } = req.params;
   req.sectorId = Number(id);
   next();
@@ -39,7 +39,7 @@ router.use("/:id", async (req: RequestWithEmployeeId, res, next) => {
 
 router.get(
   "/:id",
-  errorChecked(async (req: RequestWithEmployeeId, res) => {
+  errorChecked(async (req: RequestWithSectorId, res) => {
     const employee = await sectorServicesQuery.getASector(req.sectorId)
     res.status(200).json(employee);
   })
@@ -47,7 +47,7 @@ router.get(
 
 router.put(
   "/:id",
-  errorChecked(async (req: RequestWithEmployeeId, res) => {
+  errorChecked(async (req: RequestWithSectorId, res) => {
     const updatedEmployee = await sectorServicesQuery.updateASector(req.sectorId, req.body);
     res.status(200).json(updatedEmployee);
   })
@@ -55,7 +55,7 @@ router.put(
 
 router.delete(
   "/:id",
-  errorChecked(async (req: RequestWithEmployeeId, res) => {
+  errorChecked(async (req: RequestWithSectorId, res) => {
     const deletedEmployee = await sectorServicesQuery.deleteASector(req.sectorId)
     res.status(200).json(deletedEmployee);
   })

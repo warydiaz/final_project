@@ -25,7 +25,7 @@ export class LeaveRequest {
     this.id = id;
   }
 
-  public getObjEmployee(): any{
+  public getObjLeaveRequest(): any{
     const aLeaveRequest = {
       "employeeId": this.employeeId,
       "startDate": this.startDate,

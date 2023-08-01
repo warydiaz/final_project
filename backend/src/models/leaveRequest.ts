@@ -1,13 +1,13 @@
 export class LeaveRequest {
   public id: number | undefined;
-  public employeeId: string;
+  public employeeId: number;
   public startDate: Date;
   public endtDate: Date;
   public hours_off_requeted: number;
   public status: string;
 
   constructor(
-    employeeId: string,
+    employeeId: number,
     startDate: Date,
     endtDate: Date,
     hours_off_requeted: number,
@@ -28,9 +28,9 @@ export class LeaveRequest {
   public getObjLeaveRequest(): any{
     const aLeaveRequest = {
       "employeeId": this.employeeId,
-      "startDate": this.startDate,
-      "endtDate": this.endtDate,
-      "hours_off_requeted": this.hours_off_requeted,
+      "start_date": this.startDate,
+      "end_date": this.endtDate,
+      "hours_off_requested": this.hours_off_requeted,
       "status": this.status
     };
     return aLeaveRequest;

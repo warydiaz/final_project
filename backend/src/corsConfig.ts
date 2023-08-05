@@ -1,6 +1,6 @@
 import cors from 'cors';
 
-const allowedOrigins = ['https://www.tu-pagina-web.com'];
+const allowedOrigins = ['http://localhost:3000'];
 
 const corsOptions = {
   origin: (origin: string | undefined, callback: cors.OriginCallback) => {

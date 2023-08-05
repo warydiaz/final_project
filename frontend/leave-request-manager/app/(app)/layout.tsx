@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import LeftPanel from "@/components/LeftPanel";
 
 export default function RootLayout({
   children,
@@ -8,6 +9,7 @@ export default function RootLayout({
   return (
     <>
       <Header />
+      <LeftPanel />
       {children}
     </>
   );

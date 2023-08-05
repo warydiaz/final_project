@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 
 export const revalidate = 0;
 
-export default async function Home() {
+export default async function Section() {
   const supabase = createServerComponentClient({ cookies });
   const { data } = await supabase.auth.getUser();
 

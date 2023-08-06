@@ -1,6 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Image from "next/image";
+import Pencil from "../app/icons/pencil.svg";
+import Trash from "../app/icons/trash.svg";
 
 interface Sector {
   id: number;
@@ -38,6 +41,22 @@ function Sector() {
             <label className="flex flex-col gap-2 mb-2">
               <li key={item.id}>
                 <span>{item.name}</span>
+                <div className="items-center">
+                    <Image
+                      src={Pencil}
+                      alt="Edit Icon"
+                      width={20}
+                      height={20}
+                    />
+                  </div>
+                  <div className="items-center">
+                    <Image
+                      src={Trash}
+                      alt="Trash Icon"
+                      width={20}
+                      height={20}
+                    />
+                  </div>
               </li>
             </label>
           </div>

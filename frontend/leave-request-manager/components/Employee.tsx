@@ -1,23 +1,27 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Image from "next/image";
+import Pencil from "../app/icons/pencil.svg";
+import Trash from "../app/icons/trash.svg";
 
-interface Sector {
+interface Employee {
   id: number;
   name: string;
-  created_at: Date;
+  employee_Sector: number;
+  userid: string;
 }
 
-function Sector() {
-  const [data, setData] = useState<Sector[]>([]);
+function Employee() {
+  const [data, setData] = useState<Employee[]>([]);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get<Sector[]>(
+        const response = await axios.get<Employee[]>(
           `http://localhost:3001/employee`
         );
-        const jsonData: Sector[] = response.data.employee;
+        const jsonData: Employee[] = response.data.employee;
         setData(jsonData);
       } catch (error) {
         console.log(`${process.env.API_URL}/employee`);
@@ -29,22 +33,46 @@ function Sector() {
   }, []);
 
   return (
-    <div className="flex flex-col ml-8 mr-8">
+    <div className="flex flex-col ml-8 mr-8 w-10/12 ">
       <h1 className="text-2xl font-bold m-4">List of Employees</h1>
-
-      <ul>
-        {data.map((person) => (
-          <div className="flex flex-col border p-4 rounded">
-            <label className="flex flex-col gap-2 mb-2">
-              <li key={person.id}>
-                <span>{person.name}</span>
-              </li>
-            </label>
-          </div>
-        ))}
-      </ul>
+      <table className="table-auto">
+        <thead>
+          <tr className="">
+            <th className="px-4 py-2">Name</th>
+            <th className="px-4 py-2">Sector</th>
+            <th className="px-4 py-2">Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((item, index) => (
+            <tr key={item.id} className="border text-center">
+              <td className="px-4 py-2">{item.name}</td>
+              <td className="px-4 py-2">{item.employee_Sector}</td>
+              <td className="px-4 py-2">{item.userid}</td>
+              <td className="px-4 py-2 flex flex-col">
+                  <div className="flex flex-col items-center">
+                    <Image
+                      src={Pencil}
+                      alt="Edit Icon"
+                      width={20}
+                      height={20}
+                    />
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <Image
+                      src={Trash}
+                      alt="Trash Icon"
+                      width={20}
+                      height={20}
+                    />
+                  </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
 
-export default Sector;
+export default Employee;

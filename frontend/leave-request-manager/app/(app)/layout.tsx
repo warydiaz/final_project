@@ -9,8 +9,9 @@ export default function RootLayout({
   return (
     <>
       <Header />
+      <div className="flex h-screen">
       <LeftPanel />
-      {children}
+      </div>
     </>
   );
 }

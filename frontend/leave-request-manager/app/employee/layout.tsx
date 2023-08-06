@@ -1,8 +1,8 @@
+import Employee from "@/components/Employee";
 import Header from "@/components/Header";
 import LeftPanel from "@/components/LeftPanel";
-import Sector from "@/components/Sector";
 export const metadata = {
-  title: "Sector",
+  title: "Employee",
   description: "Vistagaming Leave Request Manager",
 };
 
@@ -15,8 +15,8 @@ export default function RootLayout({
     <>
       <Header />
       <div className="flex h-screen">
-        <LeftPanel  />
-        <Sector/>
+        <LeftPanel />
+        <Employee />
       </div>
     </>
   );

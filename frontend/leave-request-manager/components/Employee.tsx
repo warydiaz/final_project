@@ -15,12 +15,12 @@ function Sector() {
     async function fetchData() {
       try {
         const response = await axios.get<Sector[]>(
-          `http://localhost:3001/sector`
+          `http://localhost:3001/employee`
         );
-        const jsonData: Sector[] = response.data.Sector;
+        const jsonData: Sector[] = response.data.employee;
         setData(jsonData);
       } catch (error) {
-        console.log(`${process.env.API_URL}/sector`);
+        console.log(`${process.env.API_URL}/employee`);
         console.error("Error fetching data:", error);
       }
     }
@@ -30,14 +30,14 @@ function Sector() {
 
   return (
     <div className="flex flex-col ml-8 mr-8">
-      <h1 className="text-2xl font-bold m-4">List of Sectors</h1>
+      <h1 className="text-2xl font-bold m-4">List of Employees</h1>
 
       <ul>
-        {data.map((item) => (
+        {data.map((person) => (
           <div className="flex flex-col border p-4 rounded">
             <label className="flex flex-col gap-2 mb-2">
-              <li key={item.id}>
-                <span>{item.name}</span>
+              <li key={person.id}>
+                <span>{person.name}</span>
               </li>
             </label>
           </div>

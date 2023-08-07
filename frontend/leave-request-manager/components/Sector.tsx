@@ -37,11 +37,14 @@ function Sector() {
 
       <ul>
         {data.map((item) => (
-          <div className="flex flex-col border p-4 rounded">
-            <label className="flex flex-col gap-2 mb-2">
+          <div className="flex flex-row border p-2 rounded justify-center m-3">
+            <div className="grid items-center gap-2">
               <li key={item.id}>
-                <span>{item.name}</span>
-                <div className="items-center">
+                {item.name}
+              </li>
+            </div>
+            <div className="flex flex-row px-4 py-2 justify-center">
+                  <div className="m-4 cursor-pointer">
                     <Image
                       src={Pencil}
                       alt="Edit Icon"
@@ -49,7 +52,7 @@ function Sector() {
                       height={20}
                     />
                   </div>
-                  <div className="items-center">
+                  <div className="m-4 cursor-pointer">
                     <Image
                       src={Trash}
                       alt="Trash Icon"
@@ -57,8 +60,7 @@ function Sector() {
                       height={20}
                     />
                   </div>
-              </li>
-            </label>
+                </div>
           </div>
         ))}
       </ul>

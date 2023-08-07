@@ -49,8 +49,8 @@ function Employee() {
               <td className="px-4 py-2">{item.name}</td>
               <td className="px-4 py-2">{item.employee_Sector}</td>
               <td className="px-4 py-2">{item.userid}</td>
-              <td className="px-4 py-2 flex flex-col">
-                  <div className="flex flex-col items-center">
+              <td className="flex flex-row px-4 py-2 justify-center">
+                  <div className="m-4 cursor-pointer">
                     <Image
                       src={Pencil}
                       alt="Edit Icon"
@@ -58,7 +58,7 @@ function Employee() {
                       height={20}
                     />
                   </div>
-                  <div className="flex flex-col items-center">
+                  <div className="m-4 cursor-pointer">
                     <Image
                       src={Trash}
                       alt="Trash Icon"

@@ -18,7 +18,7 @@ function Employee() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get<Employee[]>(
+        const response = await axios.get<{ employee: Employee[] }>(
           `http://localhost:3001/employee`
         );
         const jsonData: Employee[] = response.data.employee;

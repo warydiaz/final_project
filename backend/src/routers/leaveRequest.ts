@@ -12,7 +12,7 @@ router.get(
   "/",
   errorChecked(async (req, res) => {
     const result = await leaveRequestServicesQuery.getAllLeaveRequest();
-    res.status(200).json({ employee: result, ok: true });
+    res.status(200).json({ leaveRequest: result, ok: true });
   })
 );
 

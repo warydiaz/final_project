@@ -17,7 +17,7 @@ function Sector() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get<Sector[]>(
+        const response = await axios.get<{Sector: Sector[]}>(
           `http://localhost:3001/sector`
         );
         const jsonData: Sector[] = response.data.Sector;

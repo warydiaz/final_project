@@ -13,13 +13,13 @@ interface HolidaysType {
   created_at: Date;
 }
 
-function Sector() {
+function HolidaysType() {
   const [data, setData] = useState<HolidaysType[]>([]);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get<HolidaysType[]>(
+        const response = await axios.get<{holidaysType: HolidaysType[]}>(
           `http://localhost:3001/holidaysType`
         );
         const jsonData: HolidaysType[] = response.data.holidaysType;
@@ -34,7 +34,7 @@ function Sector() {
 
   return (
     <div className="flex flex-col ml-8 mr-8 w-10/12 ">
-      <h1 className="text-2xl font-bold m-4">List of Employees</h1>
+      <h1 className="text-2xl font-bold m-4">List of Holidays Types</h1>
       <table className="table-auto">
         <thead>
           <tr className="">
@@ -76,4 +76,4 @@ function Sector() {
   
 }
 
-export default Sector;
+export default HolidaysType;

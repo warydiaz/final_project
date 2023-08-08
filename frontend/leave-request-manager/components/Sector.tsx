@@ -33,39 +33,28 @@ function Sector() {
 
   return (
     <div className="flex flex-col ml-8 mr-8">
-      <h1 className="text-2xl font-bold m-4">List of Sectors</h1>
-
+      <h1 className="text-2xl font-bold m-4">List of Holidays Type</h1>
+  
       <ul>
         {data.map((item) => (
-          <div className="flex flex-row border p-2 rounded justify-center m-3">
+          <div key={item.id} className="flex flex-row border p-2 rounded justify-center m-3">
             <div className="grid items-center gap-2">
-              <li key={item.id}>
-                {item.name}
-              </li>
+              <li>{item.name}</li>
             </div>
             <div className="flex flex-row px-4 py-2 justify-center">
-                  <div className="m-4 cursor-pointer">
-                    <Image
-                      src={Pencil}
-                      alt="Edit Icon"
-                      width={20}
-                      height={20}
-                    />
-                  </div>
-                  <div className="m-4 cursor-pointer">
-                    <Image
-                      src={Trash}
-                      alt="Trash Icon"
-                      width={20}
-                      height={20}
-                    />
-                  </div>
-                </div>
+              <div className="m-4 cursor-pointer">
+                <Image src={Pencil} alt="Edit Icon" width={20} height={20} />
+              </div>
+              <div className="m-4 cursor-pointer">
+                <Image src={Trash} alt="Trash Icon" width={20} height={20} />
+              </div>
+            </div>
           </div>
         ))}
       </ul>
     </div>
   );
+  
 }
 
 export default Sector;

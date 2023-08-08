@@ -1,6 +1,7 @@
 
 import EmployeeLeftPanel from "./EmployeeLeftPanel";
 import SectorLeftPanel from "./SectorLeftPanel";
+import HolidaysTypeLeftPanel from "./holidaysTypeLeftPanel";
 
 export default function LeftPanel() {
   return (
@@ -8,6 +9,7 @@ export default function LeftPanel() {
       <div className="font-bold">Left Menu</div>
       <SectorLeftPanel />
       <EmployeeLeftPanel/>
+      <HolidaysTypeLeftPanel/>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Image from "next/image";
 import Pencil from "../app/icons/pencil.svg";
@@ -13,17 +13,17 @@ interface Sector {
 
 function Sector() {
   const [data, setData] = useState<Sector[]>([]);
+  const [error, setError] = useState<boolean>(false); // Estado para controlar errores
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get<{Sector: Sector[]}>(
+        const response = await axios.get<{ sector: Sector[] }>(
           `http://localhost:3001/sector`
         );
-        const jsonData: Sector[] = response.data.Sector;
+        const jsonData: Sector[] = response.data.sector;
         setData(jsonData);
       } catch (error) {
-        console.log(`${process.env.API_URL}/sector`);
         console.error("Error fetching data:", error);
       }
     }
@@ -31,10 +31,31 @@ function Sector() {
     fetchData();
   }, []);
 
+  const deleteSection = async (sectionId: number) => {
+    try {
+      const deleteResponse = await axios.delete(
+        `http://localhost:3001/sector/${sectionId}`
+      );
+      const wasDeleted: boolean = deleteResponse.data;
+
+      if (!wasDeleted) {
+        setError(true); // Establecer el estado de error si no se eliminó correctamente
+      } else {
+        setError(false); // Restablecer el estado de error si se eliminó correctamente
+        // Aquí podrías realizar alguna actualización en la lista de sectores si es necesario
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError(true);
+    }
+  };
+
   return (
     <div className="flex flex-col ml-8 mr-8">
-      <h1 className="text-2xl font-bold m-4">List of Holidays Type</h1>
-  
+      <h1 className="text-2xl font-bold m-4">List of Sectors</h1>
+
+      {error && <div className="text-red-600 font-bold">Error deleting section.</div>}
+
       <ul>
         {data.map((item) => (
           <div key={item.id} className="flex flex-row border p-2 rounded justify-center m-3">
@@ -45,7 +66,7 @@ function Sector() {
               <div className="m-4 cursor-pointer">
                 <Image src={Pencil} alt="Edit Icon" width={20} height={20} />
               </div>
-              <div className="m-4 cursor-pointer">
+              <div className="m-4 cursor-pointer" onClick={() => deleteSection(item.id)}>
                 <Image src={Trash} alt="Trash Icon" width={20} height={20} />
               </div>
             </div>
@@ -54,7 +75,6 @@ function Sector() {
       </ul>
     </div>
   );
-  
 }
 
 export default Sector;

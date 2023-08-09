@@ -11,7 +11,7 @@ router.get(
   "/",
   errorChecked(async (req, res) => {
     const result = await sectorServicesQuery.getAllSector();
-    res.status(200).json({ Sector: result, ok: true });
+    res.status(200).json({ sector: result, ok: true });
   })
 );
 

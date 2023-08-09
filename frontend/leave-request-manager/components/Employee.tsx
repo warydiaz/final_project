@@ -14,6 +14,7 @@ interface Employee {
 
 function Employee() {
   const [data, setData] = useState<Employee[]>([]);
+  const [error, setError] = useState<boolean>(false); // Estado para controlar errores
 
   useEffect(() => {
     async function fetchData() {
@@ -32,9 +33,31 @@ function Employee() {
     fetchData();
   }, []);
 
+  const deleteEmployee = async (employeeId: number) => {
+    try {
+      const deleteResponse = await axios.delete(
+        `http://localhost:3001/employee/${employeeId}`
+      );
+      const wasDeleted: boolean = deleteResponse.data;
+
+      if (!wasDeleted) {
+        setError(true); // Establecer el estado de error si no se eliminó correctamente
+      } else {
+        setError(false); // Restablecer el estado de error si se eliminó correctamente
+        // Aquí podrías realizar alguna actualización en la lista de sectores si es necesario
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError(true);
+    }
+  };
+
   return (
     <div className="flex flex-col ml-8 mr-8 w-10/12 ">
       <h1 className="text-2xl font-bold m-4">List of Employees</h1>
+
+      {error && <div className="text-red-600 font-bold">Error deleting Employee.</div>}
+
       <table className="table-auto">
         <thead>
           <tr className="">
@@ -58,7 +81,7 @@ function Employee() {
                       height={20}
                     />
                   </div>
-                  <div className="m-4 cursor-pointer">
+                  <div className="m-4 cursor-pointer" onClick={() => deleteEmployee(item.id)}>
                     <Image
                       src={Trash}
                       alt="Trash Icon"

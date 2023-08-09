@@ -17,21 +17,20 @@ function Employee() {
   const [error, setError] = useState<boolean>(false); // Estado para controlar errores
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get<{ employee: Employee[] }>(
-          `http://localhost:3001/employee`
-        );
-        const jsonData: Employee[] = response.data.employee;
-        setData(jsonData);
-      } catch (error) {
-        console.log(`${process.env.API_URL}/employee`);
-        console.error("Error fetching data:", error);
-      }
-    }
-
     fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get<{ employee: Employee[] }>(
+        `http://localhost:3001/employee`
+      );
+      const jsonData: Employee[] = response.data.employee;
+      setData(jsonData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
 
   const deleteEmployee = async (employeeId: number) => {
     try {
@@ -41,10 +40,10 @@ function Employee() {
       const wasDeleted: boolean = deleteResponse.data;
 
       if (!wasDeleted) {
-        setError(true); // Establecer el estado de error si no se eliminó correctamente
+        setError(true); 
       } else {
-        setError(false); // Restablecer el estado de error si se eliminó correctamente
-        // Aquí podrías realizar alguna actualización en la lista de sectores si es necesario
+        setError(false); 
+        fetchData();
       }
     } catch (error) {
       console.error("Error fetching data:", error);

@@ -15,26 +15,49 @@ interface HolidaysType {
 
 function HolidaysType() {
   const [data, setData] = useState<HolidaysType[]>([]);
+  const [error, setError] = useState<boolean>(false); // Estado para controlar errores
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get<{holidaysType: HolidaysType[]}>(
-          `http://localhost:3001/holidaysType`
-        );
-        const jsonData: HolidaysType[] = response.data.holidaysType;
-        setData(jsonData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    }
-
     fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get<{holidaysType: HolidaysType[]}>(
+        `http://localhost:3001/holidaysType`
+      );
+      const jsonData: HolidaysType[] = response.data.holidaysType;
+      setData(jsonData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+
+  const deleteHolidayType = async (holidayTypeId: number) => {
+    try {
+      const deleteResponse = await axios.delete(
+        `http://localhost:3001/holidaysType/${holidayTypeId}`
+      );
+      const wasDeleted: boolean = deleteResponse.data;
+
+      if (!wasDeleted) {
+        setError(true); 
+      } else {
+        setError(false);
+        fetchData();
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError(true);
+    }
+  };
 
   return (
     <div className="flex flex-col ml-8 mr-8 w-10/12 ">
       <h1 className="text-2xl font-bold m-4">List of Holidays Types</h1>
+
+      {error && <div className="text-red-600 font-bold">Error deleting Holidays Type.</div>}
+
       <table className="table-auto">
         <thead>
           <tr className="">
@@ -58,7 +81,7 @@ function HolidaysType() {
                       height={20}
                     />
                   </div>
-                  <div className="m-4 cursor-pointer">
+                  <div className="m-4 cursor-pointer" onClick={() => deleteHolidayType(item.id)}>
                     <Image
                       src={Trash}
                       alt="Trash Icon"

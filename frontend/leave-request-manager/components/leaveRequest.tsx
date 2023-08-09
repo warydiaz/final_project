@@ -16,36 +16,60 @@ interface LeaveRequest {
 
 function LeaveRequest() {
   const [data, setData] = useState<any []>([]);
+  const [error, setError] = useState<boolean>(false); // Estado para controlar errores
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get<{leaveRequest: LeaveRequest[]}>(
-          `http://localhost:3001/leaveRequest`
-        );
-        const jsonData: LeaveRequest[] = response.data.leaveRequest;
-
-        const jsonDataProceced = jsonData.map(item => ({
-          id: item.id,
-          employeeId: item.employeeId,
-          start_date: new Date(item.start_date).toLocaleDateString(),
-          end_date: new Date(item.end_date).toLocaleDateString(),
-          hours_off_requested: item.hours_off_requested,
-          status: item.status,
-        }));
-        
-        setData(jsonDataProceced);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    }
-
     fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get<{leaveRequest: LeaveRequest[]}>(
+        `http://localhost:3001/leaveRequest`
+      );
+      const jsonData: LeaveRequest[] = response.data.leaveRequest;
+
+      const jsonDataProceced = jsonData.map(item => ({
+        id: item.id,
+        employeeId: item.employeeId,
+        start_date: new Date(item.start_date).toLocaleDateString(),
+        end_date: new Date(item.end_date).toLocaleDateString(),
+        hours_off_requested: item.hours_off_requested,
+        status: item.status,
+      }));
+      
+      setData(jsonDataProceced);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+
+  const deleteLeaveRequest = async (leaveRequestId: number) => {
+    try {
+      const deleteResponse = await axios.delete(
+        `http://localhost:3001/leaveRequest/${leaveRequestId}`
+      );
+      const wasDeleted: boolean = deleteResponse.data;
+
+      if (!wasDeleted) {
+        setError(true); 
+      } else {
+        setError(false); 
+        fetchData();
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError(true);
+    }
+  };
+
 
   return (
     <div className="flex flex-col ml-8 mr-8 w-10/12 ">
       <h1 className="text-2xl font-bold m-4">List of Leave Request</h1>
+
+      {error && <div className="text-red-600 font-bold">Error deleting Leave Request.</div>}
+
       <table className="table-auto">
         <thead>
           <tr className="">
@@ -73,7 +97,7 @@ function LeaveRequest() {
                       height={20}
                     />
                   </div>
-                  <div className="m-4 cursor-pointer">
+                  <div className="m-4 cursor-pointer" onClick={() => deleteLeaveRequest(item.id)}>
                     <Image
                       src={Trash}
                       alt="Trash Icon"

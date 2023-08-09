@@ -16,20 +16,20 @@ function Sector() {
   const [error, setError] = useState<boolean>(false); // Estado para controlar errores
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get<{ sector: Sector[] }>(
-          `http://localhost:3001/sector`
-        );
-        const jsonData: Sector[] = response.data.sector;
-        setData(jsonData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    }
-
     fetchData();
   }, []);
+
+  const fetchData =  async () => {
+    try {
+      const response = await axios.get<{ sector: Sector[] }>(
+        `http://localhost:3001/sector`
+      );
+      const jsonData: Sector[] = response.data.sector;
+      setData(jsonData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
 
   const deleteSection = async (sectionId: number) => {
     try {
@@ -39,10 +39,10 @@ function Sector() {
       const wasDeleted: boolean = deleteResponse.data;
 
       if (!wasDeleted) {
-        setError(true); // Establecer el estado de error si no se eliminó correctamente
+        setError(true); 
       } else {
-        setError(false); // Restablecer el estado de error si se eliminó correctamente
-        // Aquí podrías realizar alguna actualización en la lista de sectores si es necesario
+        setError(false); 
+        fetchData();
       }
     } catch (error) {
       console.error("Error fetching data:", error);

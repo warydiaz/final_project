@@ -5,26 +5,28 @@ import React, { FormEventHandler, useState } from "react";
 interface AddSectorProps {
   onClose: () => void;
   onRefresh: () => void;
+  sectorId: number;
+  name: string;
 }
 
-export default function AddSector({ onClose, onRefresh }: AddSectorProps) {
-  const [sector, setSector] = useState("");
+export default function UpdateSector({ onClose, onRefresh, sectorId, name}: AddSectorProps) {
+  const [sector, setSector] = useState(name);
   const [error, setError] = useState<boolean>(false);
 
-  const addSector = async () => {
+  const updateSector = async () => {
     if (sector.trim() === "") {
       setError(true);
       return;
     }
 
     try {
-      const addSectorResponse = await axios.post(
-        `http://localhost:3001/sector`,
-        { name: sector }
+      const updatedSectorResponse = await axios.put(
+        `http://localhost:3001/sector/${sectorId}`,
+        { "name": sector }
       );
-      const wasAdded: boolean = addSectorResponse.data.ok;
-
-      if (!wasAdded) {
+      const wasUpdated: boolean = updatedSectorResponse.data;
+      
+      if (!wasUpdated) {
         setError(true);
       } else {
         setError(false);
@@ -38,16 +40,16 @@ export default function AddSector({ onClose, onRefresh }: AddSectorProps) {
 
   const formSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    addSector();
+    updateSector();
   };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 shadow-md">
       <div className="bg-white p-4 rounded shadow-2xl">
-        <h2 className="text-lg font-semibold mb-2">Add a new Sector</h2>
+        <h2 className="text-lg font-semibold mb-2">Update Sector</h2>
 
         {error && (
-          <div className="text-red-600 font-bold">Error Adding a Sector.</div>
+          <div className="text-red-600 font-bold">Error Updating Sector.</div>
         )}
 
         <form
@@ -72,9 +74,9 @@ export default function AddSector({ onClose, onRefresh }: AddSectorProps) {
             </button>
             <button
               className="bg-stone-200 py-1 px-3 rounded"
-              onClick={addSector}
+              onClick={updateSector}
             >
-              Add
+              Update
             </button>
           </div>
         </form>

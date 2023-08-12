@@ -5,6 +5,7 @@ import Image from "next/image";
 import Pencil from "../app/icons/pencil.svg";
 import Trash from "../app/icons/trash.svg";
 import AddHolidaysType from "./AddHolidaysType";
+import UpdateHolidaysType from "./UpdateHolidaysType";
 
 interface HolidaysType {
   id: number;
@@ -19,6 +20,12 @@ function HolidaysType() {
   const [error, setError] = useState<boolean>(false);
   const [showPopupAddHolidaysType, setshowPopupAddHolidaysType] =
     useState(false);
+  const [showPopupUpdateHolidaysType, setShowPopupUpdateHolidaysType] =
+    useState(false);
+  const [holidaysTypeId, setHolidaysTypeId] = useState(0);
+  const [holidaysTypeCountry, setHolidaysTypeCountry] = useState("");
+  const [amountOfDaysOff, setAmountOfDaysOff] = useState(0);
+  const [nameOfHolidaysType, setNameOfHolidaysType] = useState("");
 
   const openPopupAddHolidaysType = () => {
     setshowPopupAddHolidaysType(true);
@@ -26,6 +33,14 @@ function HolidaysType() {
 
   const closePopupAddHolidaysType = () => {
     setshowPopupAddHolidaysType(false);
+  };
+
+  const openPopupUpdateHolidaysType = () => {
+    setShowPopupUpdateHolidaysType(true);
+  };
+
+  const closePopupUpdateHolidaysType = () => {
+    setShowPopupUpdateHolidaysType(false);
   };
 
   const refreshData = () => {
@@ -87,6 +102,17 @@ function HolidaysType() {
         />
       )}
 
+      {showPopupUpdateHolidaysType && (
+        <UpdateHolidaysType
+          onClose={closePopupUpdateHolidaysType}
+          onRefresh={refreshData}
+          holidaysTypeId={holidaysTypeId}
+          country={holidaysTypeCountry}
+          daysOff={amountOfDaysOff}
+          name={nameOfHolidaysType}
+        />
+      )}
+
       {error && (
         <div className="text-red-600 font-bold">
           Error deleting Holidays Type.
@@ -108,7 +134,16 @@ function HolidaysType() {
               <td className="px-4 py-2">{item.amount_of_days_off}</td>
               <td className="px-4 py-2">{item.name}</td>
               <td className="flex flex-row px-4 py-2 justify-center">
-                <div className="m-4 cursor-pointer">
+                <div
+                  className="m-4 cursor-pointer"
+                  onClick={() => {
+                    setHolidaysTypeId(item.id);
+                    setHolidaysTypeCountry(item.country);
+                    setAmountOfDaysOff(item.amount_of_days_off);
+                    setNameOfHolidaysType(item.name);
+                    openPopupUpdateHolidaysType();
+                  }}
+                >
                   <Image src={Pencil} alt="Edit Icon" width={20} height={20} />
                 </div>
                 <div

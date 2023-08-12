@@ -2,14 +2,14 @@
 import axios from "axios";
 import React, { FormEventHandler, useState } from "react";
 
-interface AddSectorProps {
+interface UpdateSectorProps {
   onClose: () => void;
   onRefresh: () => void;
   sectorId: number;
   name: string;
 }
 
-export default function UpdateSector({ onClose, onRefresh, sectorId, name}: AddSectorProps) {
+export default function UpdateSector({ onClose, onRefresh, sectorId, name}: UpdateSectorProps) {
   const [sector, setSector] = useState(name);
   const [error, setError] = useState<boolean>(false);
 

@@ -4,6 +4,7 @@ import axios from "axios";
 import Image from "next/image";
 import Pencil from "../app/icons/pencil.svg";
 import Trash from "../app/icons/trash.svg";
+import AddSector from "./AddSector";
 
 interface Sector {
   id: number;
@@ -13,7 +14,20 @@ interface Sector {
 
 function Sector() {
   const [data, setData] = useState<Sector[]>([]);
-  const [error, setError] = useState<boolean>(false); // Estado para controlar errores
+  const [error, setError] = useState<boolean>(false);
+  const [showPopup, setShowPopup] = useState(false);
+
+  const openPopup = () => {
+    setShowPopup(true);
+  };
+
+  const closePopup = () => {
+    setShowPopup(false);
+  };
+
+  const refreshData = () => {
+    fetchData();
+  };
 
   useEffect(() => {
     fetchData();
@@ -53,6 +67,18 @@ function Sector() {
   return (
     <div className="flex flex-col ml-8 mr-8">
       <h1 className="text-2xl font-bold m-4">List of Sectors</h1>
+
+      <button
+        className="bg-stone-200 py-1 px-3 rounded"
+        onClick={() => {
+          openPopup();
+          refreshData(); // Agregar esta línea para recargar la lista al abrir el pop-up
+        }}
+      >
+        Add
+      </button>
+
+        {showPopup && <AddSector onClose={closePopup} onRefresh={refreshData} />}
 
       {error && <div className="text-red-600 font-bold">Error deleting section.</div>}
 

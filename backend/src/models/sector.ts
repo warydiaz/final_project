@@ -11,7 +11,7 @@ export default class Sector {
     this.id = id;
   }
 
-  public getObjSector(): any{
+  public getObjSector(): any {
     const aSector = {
       "name": this.name,
     };

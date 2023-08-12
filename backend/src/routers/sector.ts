@@ -21,7 +21,7 @@ router.post(
     const sectorData = req.body
     const aSector: Sector = new Sector(sectorData.name);
     const newSector = await sectorServicesQuery.createASector(aSector);
-    res.status(200).json({ newSector, ok: true });
+    res.status(200).json(newSector);
   })
 );
 

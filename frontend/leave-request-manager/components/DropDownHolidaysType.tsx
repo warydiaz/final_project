@@ -1,16 +1,16 @@
-import React, { useState} from 'react';
-import {Sector}  from './types'; 
+import React, { useState } from 'react';
+import {HolidaysType}  from './types'; 
 
 interface DropdownProps {
-  data: Sector[];
-  onSelect: (selectedItem: Sector) => void
+  data: HolidaysType[];
+  onSelect: (selectedItem: HolidaysType) => void
 }
 
-export default function DropDownSector({ data, onSelect }: DropdownProps){
-    const [selectedItem, setSelectedItem] = useState<Sector | null>(null);
+export default function DropDownHolidaysType({ data, onSelect }: DropdownProps){
+    const [selectedItem, setSelectedItem] = useState<HolidaysType | null>(null);
     const [isOpen, setIsOpen] = useState<boolean>(false);
   
-    const handleSelect = (item: Sector) => {
+    const handleSelect = (item: HolidaysType) => {
       setSelectedItem(item);
       onSelect(item);
       toggleDropdown(); 
@@ -37,7 +37,7 @@ export default function DropDownSector({ data, onSelect }: DropdownProps){
           className="block w-full px-4 py-2 text-left bg-white border rounded shadow-sm focus:ring focus:ring-opacity-50"
           onClick={toggleDropdown}
         >
-          {selectedItem ? selectedItem.name : 'Selec a Sector'}
+          {selectedItem ? selectedItem.name : 'Select a Holidays Type'}
         </button>
         {isOpen && (
           <ul className="absolute w-full py-2 mt-1 space-y-1 bg-white border rounded shadow-sm">

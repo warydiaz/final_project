@@ -2,6 +2,7 @@
 import axios from "axios";
 import React, { FormEventHandler, useState, useEffect } from "react";
 import DropDownSector from "./DropDownSector";
+import DropDownHolidaysType from "./DropDownHolidaysType";
 
 interface AddEmployeeProps {
   onClose: () => void;
@@ -25,6 +26,9 @@ interface HolidaysType {
 export default function AddEmployee({ onClose, onRefresh }: AddEmployeeProps) {
   const [name, setName] = useState("");
   const [sector, setSector] = useState(0);
+  const [sectorName, setSectorName] = useState("");
+  const [documentNumber, setDocumentNumber] = useState("");
+  const [holidaysType, setHolidaysType] = useState(0);
   const [email, setEmail] = useState("");
   const [error, setError] = useState<boolean>(false);
   const [dataSector, setDataSector] = useState<Sector[]>([]);
@@ -59,12 +63,17 @@ export default function AddEmployee({ onClose, onRefresh }: AddEmployeeProps) {
     }
   };
 
-  const selectSector = (sector: Sector) =>{
+  const selectSector = (sector: Sector) => {
     setSector(sector.id);
-  }
+    setSectorName(sector.name);
+  };
+
+  const selectHolidaysType = (holidaysType: HolidaysType) => {
+    setHolidaysType(holidaysType.id);
+  };
 
   const addEmployee = async () => {
-    if (name.trim() === "" || sector === 0 || email.trim() === "") {
+    if (name.trim() === "" || sector === 0 || email.trim() === "" || documentNumber.trim() === "") {
       setError(true);
       return;
     }
@@ -76,10 +85,10 @@ export default function AddEmployee({ onClose, onRefresh }: AddEmployeeProps) {
           userid: email,
           name: name,
           document_type: 1,
-          document_number: "1234",
-          current_hours_off: 8,
-          position_name: "Developer",
-          holidays_typeId: 1,
+          document_number: documentNumber,
+          current_hours_off: 0,
+          position_name: sectorName,
+          holidays_typeId: holidaysType,
           employee_Sector: sector,
         }
       );
@@ -127,7 +136,7 @@ export default function AddEmployee({ onClose, onRefresh }: AddEmployeeProps) {
           </label>
           <label className="flex flex-col gap-2 mb-2">
             <span>Sector:</span>
-            <DropDownSector data={dataSector} onSelect={selectSector}/>
+            <DropDownSector data={dataSector} onSelect={selectSector} />
           </label>
 
           <label className="flex flex-col gap-2 mb-2">
@@ -139,6 +148,25 @@ export default function AddEmployee({ onClose, onRefresh }: AddEmployeeProps) {
               className="border"
             />
           </label>
+
+          <label className="flex flex-col gap-2 mb-2">
+            <span>Holidays Type:</span>
+            <DropDownHolidaysType
+              data={dataHolidaysType}
+              onSelect={selectHolidaysType}
+            />
+          </label>
+
+          <label className="flex flex-col gap-2 mb-2">
+            <span>Document Number:</span>
+            <input
+              type="string"
+              value={name}
+              onChange={(e) => setDocumentNumber(e.target.value)}
+              className="border"
+            />
+          </label>
+
           <div className="flex justify-around">
             <button
               className="bg-stone-200 py-1 px-3 rounded"

@@ -4,6 +4,7 @@ import axios from "axios";
 import Image from "next/image";
 import Pencil from "../app/icons/pencil.svg";
 import Trash from "../app/icons/trash.svg";
+import AddEmployee from "./AddEmployee";
 
 interface Employee {
   id: number;
@@ -14,7 +15,8 @@ interface Employee {
 
 function Employee() {
   const [data, setData] = useState<Employee[]>([]);
-  const [error, setError] = useState<boolean>(false); // Estado para controlar errores
+  const [error, setError] = useState<boolean>(false);
+  const [showPopupAddEmployee, setshowPopupAddEmployee] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -51,11 +53,31 @@ function Employee() {
     }
   };
 
+  const openPopupAddEmployee = () => {
+    setshowPopupAddEmployee(true);
+  };
+
+  const closePopupAddEmployee = () => {
+    setshowPopupAddEmployee(false);
+  };
+
   return (
     <div className="flex flex-col ml-8 mr-8 w-10/12 ">
       <h1 className="text-2xl font-bold m-4">List of Employees</h1>
 
+      <button
+        className="bg-stone-200 py-1 px-3 rounded w-52"
+        onClick={() => {
+          openPopupAddEmployee();
+        }}
+      >
+        Add
+      </button>
+
       {error && <div className="text-red-600 font-bold">Error deleting Employee.</div>}
+      {showPopupAddEmployee && (
+        <AddEmployee onClose={closePopupAddEmployee} onRefresh={fetchData} />
+      )}
 
       <table className="table-auto">
         <thead>

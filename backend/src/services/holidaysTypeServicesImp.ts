@@ -88,14 +88,15 @@ export class HolidaysTypeServicesImp implements HolidaysTypeServices {
     try {
       const { data, error }: PostgrestResponse<HolidaysType> = await supabase
         .from("Holidays_type")
-        .insert([holidaysType.getObjHolidays_type()]);
+        .insert([holidaysType.getObjHolidays_type()])
+        .select();
 
       if (error) {
         console.error(`Error inserting HolidaysType:`, error);
         return null;
       } else {
         console.log(`HolidaysType inserted successfully.`);
-        return data.length ? data[0] : null;
+        return data[0];
       }
     } catch (error) {
       console.error(`Error inserting HolidaysType:`, error);

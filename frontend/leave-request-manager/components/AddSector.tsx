@@ -20,7 +20,7 @@ export default function AddSector({ onClose, onRefresh }: AddSectorProps) {
     try {
       const addSectorResponse = await axios.post(
         `http://localhost:3001/sector`,
-        { name: sector }
+        { "name": sector }
       );
       const wasAdded: boolean = addSectorResponse.data.ok;
 
@@ -38,7 +38,6 @@ export default function AddSector({ onClose, onRefresh }: AddSectorProps) {
 
   const formSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    addSector();
   };
 
   return (

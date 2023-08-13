@@ -86,16 +86,18 @@ export class SectorServicesImp implements SectorServices {
 
   public createASector = async (sector: Sector): Promise<{sector: Sector,ok: boolean}> => {
     try {
+      
       const { data, error }: PostgrestResponse<Sector> = await supabase
         .from("Sector")
-        .insert([sector.getObjSector()]);
+        .insert([sector.getObjSector()])
+        .select();
 
       if (error) {
         console.error(`Error inserting Sector:`, error);
         return {sector: null, ok:false};
       } else {
         console.log(`Sector inserted successfully.`);
-        return {sector: data.length ? data[0] : null, ok:true};
+        return {sector: data[0], ok:true};
       }
     } catch (error) {
       console.error(`Error inserting Sector:`, error);

@@ -58,7 +58,6 @@ export default function AddHolidaysType({
 
   const formSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    addHolidaysType();
   };
 
   return (

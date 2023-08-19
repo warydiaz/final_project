@@ -1,63 +1,63 @@
 import { Request, Router } from "express";
-import  SectorServices  from "../services/sectorServices.js";
-import { SectorServicesImp } from "../services/sectorServicesImp.js";
+import  DocumentTypeServices  from "../services/documentTypeServices.js";
+import { DocumentTypeServicesImp } from "../services/documentTypeServicesImp.js";
 import { errorChecked } from "../utils.js";
-import  Sector  from "../models/sector.js";
+import  DocumentType  from "../models/documentType.js";
 
 const router = Router();
-const sectorServicesQuery: SectorServices = new SectorServicesImp();
+const DocumentTypeServicesQuery: DocumentTypeServices = new DocumentTypeServicesImp();
 
 router.get(
   "/",
   errorChecked(async (req, res) => {
-    const result = await sectorServicesQuery.getAllSector();
-    res.status(200).json({ sector: result, ok: true });
+    const result = await DocumentTypeServicesQuery.getAllDocumentType();
+    res.status(200).json({ documentType: result, ok: true });
   })
 );
 
 router.post(
   "/",  
   errorChecked(async (req, res) => {
-    const sectorData = req.body
-    const aSector: Sector = new Sector(sectorData.name);
-    const newSector = await sectorServicesQuery.createASector(aSector);
-    res.status(200).json(newSector);
+    const documentTypeData = req.body
+    const aDocumentType: DocumentType = new DocumentType(documentTypeData.name);
+    const newDocumentType = await DocumentTypeServicesQuery.createADocumentType(aDocumentType);
+    res.status(200).json(newDocumentType);
   })
 );
 
-export interface RequestWithSectorId extends Request {
+export interface RequestWithDocumentTypeId extends Request {
     params: { id: any; };
     body: any;
-    sectorId: number;
+    documentTypeId: number;
 }
 
-router.use("/:id", async (req: RequestWithSectorId, res, next) => {
+router.use("/:id", async (req: RequestWithDocumentTypeId, res, next) => {
   const { id } = req.params;
-  req.sectorId = Number(id);
+  req.documentTypeId = Number(id);
   next();
 });
 
 router.get(
   "/:id",
-  errorChecked(async (req: RequestWithSectorId, res) => {
-    const employee = await sectorServicesQuery.getASector(req.sectorId)
-    res.status(200).json(employee);
+  errorChecked(async (req: RequestWithDocumentTypeId, res) => {
+    const documentType = await DocumentTypeServicesQuery.getADocumentType(req.documentTypeId)
+    res.status(200).json(documentType);
   })
 );
 
 router.put(
   "/:id",
-  errorChecked(async (req: RequestWithSectorId, res) => {
-    const updatedEmployee = await sectorServicesQuery.updateASector(req.sectorId, req.body);
-    res.status(200).json(updatedEmployee);
+  errorChecked(async (req: RequestWithDocumentTypeId, res) => {
+    const updateddocumentType = await DocumentTypeServicesQuery.updateADocumentType(req.documentTypeId, req.body);
+    res.status(200).json(updateddocumentType);
   })
 );
 
 router.delete(
   "/:id",
-  errorChecked(async (req: RequestWithSectorId, res) => {
-    const deletedEmployee = await sectorServicesQuery.deleteASector(req.sectorId)
-    res.status(200).json(deletedEmployee);
+  errorChecked(async (req: RequestWithDocumentTypeId, res) => {
+    const deleteddocumentType = await DocumentTypeServicesQuery.deleteADocumentType(req.documentTypeId)
+    res.status(200).json(deleteddocumentType);
   })
 );
 

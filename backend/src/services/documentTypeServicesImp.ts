@@ -12,6 +12,8 @@ export class DocumentTypeServicesImp implements DocumentTypeServices {
         .from("Document_type")
         .select("*");
 
+        console.log(data);
+
       if (error) {
         console.error(`Error trying to get data from Document Type":`, error);
         return null;

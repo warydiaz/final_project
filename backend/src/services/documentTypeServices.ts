@@ -1,5 +1,5 @@
 import  DocumentType  from "../models/documentType.js";
-interface WadAdded {
+interface WasAdded {
     DocumentType: DocumentType,
     ok: boolean
 }
@@ -8,5 +8,5 @@ export default interface DocumentTypeServices{
     getADocumentType(id: Number): Promise<DocumentType>;
     updateADocumentType(id: number, updatedData: Partial<DocumentType>): Promise<boolean>;
     deleteADocumentType(id: number): Promise<boolean>;
-    createADocumentType(DocumentType: DocumentType): Promise<WadAdded> ;
+    createADocumentType(DocumentType: DocumentType): Promise<WasAdded> ;
 };

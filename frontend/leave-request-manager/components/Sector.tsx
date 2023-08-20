@@ -6,12 +6,8 @@ import Pencil from "../app/icons/pencil.svg";
 import Trash from "../app/icons/trash.svg";
 import AddSector from "./AddSector";
 import UpdateSector from "./UpdateSector";
+import { Sector } from "./types";
 
-interface Sector {
-  id: number;
-  name: string;
-  created_at: Date;
-}
 
 function Sector() {
   const [data, setData] = useState<Sector[]>([]);

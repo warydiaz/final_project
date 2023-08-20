@@ -5,18 +5,15 @@ import Image from "next/image";
 import Pencil from "../app/icons/pencil.svg";
 import Trash from "../app/icons/trash.svg";
 import AddEmployee from "./AddEmployee";
-
-interface Employee {
-  id: number;
-  name: string;
-  employee_Sector: number;
-  userid: string;
-}
+import { Employee } from "./types";
+import UpdateEmployee from "./UpdateEmployee";
 
 function Employee() {
   const [data, setData] = useState<Employee[]>([]);
   const [error, setError] = useState<boolean>(false);
   const [showPopupAddEmployee, setshowPopupAddEmployee] = useState(false);
+  const [showPopupUpdateEmployee, setshowPopupUpdateEmployee] = useState(false);
+  const [employeeIdToUpdate, setEmployeeIdToUpdate] = useState(0);
 
   useEffect(() => {
     fetchData();
@@ -32,7 +29,7 @@ function Employee() {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  }
+  };
 
   const deleteEmployee = async (employeeId: number) => {
     try {
@@ -42,15 +39,23 @@ function Employee() {
       const wasDeleted: boolean = deleteResponse.data;
 
       if (!wasDeleted) {
-        setError(true); 
+        setError(true);
       } else {
-        setError(false); 
+        setError(false);
         fetchData();
       }
     } catch (error) {
       console.error("Error fetching data:", error);
       setError(true);
     }
+  };
+
+  const openPopupUpdateEmployee = () => {
+    setshowPopupUpdateEmployee(true);
+  };
+
+  const closePopupUpdateEmployee = () => {
+    setshowPopupUpdateEmployee(false);
   };
 
   const openPopupAddEmployee = () => {
@@ -74,9 +79,19 @@ function Employee() {
         Add
       </button>
 
-      {error && <div className="text-red-600 font-bold">Error deleting Employee.</div>}
+      {error && (
+        <div className="text-red-600 font-bold">Error deleting Employee.</div>
+      )}
       {showPopupAddEmployee && (
         <AddEmployee onClose={closePopupAddEmployee} onRefresh={fetchData} />
+      )}
+
+      {showPopupUpdateEmployee && (
+        <UpdateEmployee
+          onClose={closePopupUpdateEmployee}
+          onRefresh={fetchData}
+          employeeId={employeeIdToUpdate}
+        />
       )}
 
       <table className="table-auto">
@@ -91,25 +106,24 @@ function Employee() {
           {data.map((item, index) => (
             <tr key={item.id} className="border text-center">
               <td className="px-4 py-2">{item.name}</td>
-              <td className="px-4 py-2">{item.employee_Sector}</td>
+              <td className="px-4 py-2">{item.position_name}</td>
               <td className="px-4 py-2">{item.userid}</td>
-              <td className="flex flex-row px-4 py-2 justify-center">
-                  <div className="m-4 cursor-pointer">
-                    <Image
-                      src={Pencil}
-                      alt="Edit Icon"
-                      width={20}
-                      height={20}
-                    />
-                  </div>
-                  <div className="m-4 cursor-pointer" onClick={() => deleteEmployee(item.id)}>
-                    <Image
-                      src={Trash}
-                      alt="Trash Icon"
-                      width={20}
-                      height={20}
-                    />
-                  </div>
+              <td
+                className="flex flex-row px-4 py-2 justify-center"
+                onClick={() => {
+                  setEmployeeIdToUpdate(item.id);
+                  openPopupUpdateEmployee();
+                }}
+              >
+                <div className="m-4 cursor-pointer">
+                  <Image src={Pencil} alt="Edit Icon" width={20} height={20} />
+                </div>
+                <div
+                  className="m-4 cursor-pointer"
+                  onClick={() => deleteEmployee(item.id)}
+                >
+                  <Image src={Trash} alt="Trash Icon" width={20} height={20} />
+                </div>
               </td>
             </tr>
           ))}

@@ -5,20 +5,26 @@ import DropDownSector from "./DropDownSector";
 import DropDownHolidaysType from "./DropDownHolidaysType";
 import DropDownDocumentType from "./DropDownDocumentType";
 
-import { HolidaysType, Sector, DocumentType } from "./types";
+import { HolidaysType, Sector, DocumentType, Employee } from "./types";
 
-interface AddEmployeeProps {
+interface UpdateEmployeeProps {
   onClose: () => void;
   onRefresh: () => void;
+  employeeId: number;
 }
 
-export default function AddEmployee({ onClose, onRefresh }: AddEmployeeProps) {
+export default function AddEmployee({
+  onClose,
+  onRefresh,
+  employeeId,
+}: UpdateEmployeeProps) {
   const [name, setName] = useState("");
   const [sector, setSector] = useState(0);
   const [sectorName, setSectorName] = useState("");
   const [documentType, setDocumentType] = useState(0);
   const [documentNumber, setDocumentNumber] = useState("");
   const [holidaysType, setHolidaysType] = useState(0);
+  const [currentHoursOff, setCurrentHoursOff] = useState(0);
   const [email, setEmail] = useState("");
   const [error, setError] = useState<boolean>(false);
   const [dataSector, setDataSector] = useState<Sector[]>([]);
@@ -26,6 +32,7 @@ export default function AddEmployee({ onClose, onRefresh }: AddEmployeeProps) {
   const [dataDocumentType, setDataDocumentType] = useState<DocumentType[]>([]);
 
   useEffect(() => {
+    fetchDataEmployee();
     fetchDataSector();
     fetchDataHolidaysType();
     fetchDataDocumetType();
@@ -67,6 +74,24 @@ export default function AddEmployee({ onClose, onRefresh }: AddEmployeeProps) {
     }
   };
 
+  const fetchDataEmployee = async () => {
+    try {
+      const response = await axios.get<{ employee: Employee }>(
+        `http://localhost:3001/employee/${employeeId}`
+      );
+      const jsonData: Employee = response.data;
+      setName(jsonData.name);
+      setSector(jsonData.employee_Sector);
+      setDocumentType(jsonData.document_type);
+      setDocumentNumber(jsonData.document_number);
+      setHolidaysType(jsonData.holidays_typeId);
+      setEmail(jsonData.userid);
+      setCurrentHoursOff(jsonData.current_hours_off);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   const selectSector = (sector: Sector) => {
     setSector(sector.id);
     setSectorName(sector.name);
@@ -81,26 +106,31 @@ export default function AddEmployee({ onClose, onRefresh }: AddEmployeeProps) {
   };
 
   const addEmployee = async () => {
-    if (name.trim() === "" || sector === 0 || email.trim() === "" || documentNumber.trim() === "") {
+    if (
+      name.trim() === "" ||
+      sector === 0 ||
+      email.trim() === "" ||
+      documentNumber.trim() === ""
+    ) {
       setError(true);
       return;
     }
 
     try {
-      const addEmployeeResponse = await axios.post(
-        `http://localhost:3001/employee`,
+      const addEmployeeResponse = await axios.put(
+        `http://localhost:3001/employee/${employeeId}`,
         {
           userid: email,
           name: name,
           document_type: documentType,
           document_number: documentNumber,
-          current_hours_off: 0,
+          current_hours_off: currentHoursOff,
           position_name: sectorName,
           holidays_typeId: holidaysType,
           employee_Sector: sector,
         }
       );
-      const wasAdded: boolean = addEmployeeResponse.data.ok;
+      const wasAdded: boolean = addEmployeeResponse.data;
 
       if (!wasAdded) {
         setError(true);
@@ -121,11 +151,11 @@ export default function AddEmployee({ onClose, onRefresh }: AddEmployeeProps) {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 shadow-md">
       <div className="bg-white p-4 rounded shadow-2xl">
-        <h2 className="text-lg font-semibold mb-2">Add an Employee</h2>
+        <h2 className="text-lg font-semibold mb-2">Update Employee</h2>
 
         {error && (
           <div className="text-red-600 font-bold">
-            Error Adding an Employee.
+            Error Updating Employee.
           </div>
         )}
 
@@ -166,6 +196,16 @@ export default function AddEmployee({ onClose, onRefresh }: AddEmployeeProps) {
           </label>
 
           <label className="flex flex-col gap-2 mb-2">
+            <span>Hours Off:</span>
+            <input
+              type="number"
+              value={currentHoursOff}
+              onChange={(e) => setEmail(e.target.value)}
+              className="border"
+            />
+          </label>
+
+          <label className="flex flex-col gap-2 mb-2">
             <span>Document Type:</span>
             <DropDownDocumentType
               data={dataDocumentType}
@@ -194,7 +234,7 @@ export default function AddEmployee({ onClose, onRefresh }: AddEmployeeProps) {
               className="bg-stone-200 py-1 px-3 rounded"
               onClick={addEmployee}
             >
-              Add
+              Update
             </button>
           </div>
         </form>

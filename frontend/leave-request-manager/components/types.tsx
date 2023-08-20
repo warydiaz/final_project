@@ -24,6 +24,15 @@
   export interface Employee {
     id: number;
     name: string;
-    employee_Sector: number;
+    document_type: number;
+    document_number: string;
+    current_hours_off: number;
     userid: string;
+    holidays_typeId:number;
+    employee_Sector:number;
+  }
+
+  export interface DocumentType {
+    id: number;
+    name: string;
   }

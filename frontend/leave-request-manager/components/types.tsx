@@ -30,6 +30,7 @@
     userid: string;
     holidays_typeId:number;
     employee_Sector:number;
+    position_name: string;
   }
 
   export interface DocumentType {

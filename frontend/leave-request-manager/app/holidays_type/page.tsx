@@ -12,8 +12,6 @@ export default async function HolidaysType() {
     redirect("/login");
   }
   return (
-    <main className="p-6">
-     
-    </main>
+   <></>
   );
 }

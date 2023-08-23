@@ -1,19 +1,16 @@
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
+import {getUser} from "../userData";
 
 export const revalidate = 0;
 
 export default async function LeaveRequest() {
-  const supabase = createServerComponentClient({ cookies });
-  const { data } = await supabase.auth.getUser();
+ 
+  const data  = getUser();
 
   if (!data.user) {
     redirect("/login");
   }
   return (
-    <main className="p-6">
-     
-    </main>
+    <></>
   );
 }

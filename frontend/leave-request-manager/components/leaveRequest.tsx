@@ -4,19 +4,14 @@ import axios from "axios";
 import Image from "next/image";
 import Pencil from "../app/icons/pencil.svg";
 import Trash from "../app/icons/trash.svg";
-
-interface LeaveRequest {
-  id: number;
-  employeeId: number;
-  start_date: Date;
-  end_date: Date;
-  hours_off_requested: number;
-  status: string;
-}
+import { LeaveRequest, Employee } from "./types";
+import AddLeaveRequest from "./AddLeaveRequest";
 
 function LeaveRequest() {
-  const [data, setData] = useState<any []>([]);
-  const [error, setError] = useState<boolean>(false); // Estado para controlar errores
+  const [data, setData] = useState<any[]>([]);
+  const [error, setError] = useState<boolean>(false);
+  const [showPopupAddLeaveRequest, setshowPopupAddLeaveRequest] =
+    useState(false);
 
   useEffect(() => {
     fetchData();
@@ -24,12 +19,12 @@ function LeaveRequest() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get<{leaveRequest: LeaveRequest[]}>(
+      const response = await axios.get<{ leaveRequest: LeaveRequest[] }>(
         `http://localhost:3001/leaveRequest`
       );
       const jsonData: LeaveRequest[] = response.data.leaveRequest;
 
-      const jsonDataProceced = jsonData.map(item => ({
+      const jsonDataProceced = jsonData.map((item) => ({
         id: item.id,
         employeeId: item.employeeId,
         start_date: new Date(item.start_date).toLocaleDateString(),
@@ -37,12 +32,20 @@ function LeaveRequest() {
         hours_off_requested: item.hours_off_requested,
         status: item.status,
       }));
-      
+
       setData(jsonDataProceced);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  }
+  };
+
+  const openPopupAddLeaveRequest = () => {
+    setshowPopupAddLeaveRequest(true);
+  };
+
+  const closePopupAddLeaveRequest = () => {
+    setshowPopupAddLeaveRequest(false);
+  };
 
   const deleteLeaveRequest = async (leaveRequestId: number) => {
     try {
@@ -52,9 +55,9 @@ function LeaveRequest() {
       const wasDeleted: boolean = deleteResponse.data;
 
       if (!wasDeleted) {
-        setError(true); 
+        setError(true);
       } else {
-        setError(false); 
+        setError(false);
         fetchData();
       }
     } catch (error) {
@@ -63,12 +66,32 @@ function LeaveRequest() {
     }
   };
 
-
   return (
     <div className="flex flex-col ml-8 mr-8 w-10/12 ">
       <h1 className="text-2xl font-bold m-4">List of Leave Request</h1>
 
-      {error && <div className="text-red-600 font-bold">Error deleting Leave Request.</div>}
+      <button
+        className="bg-stone-200 py-1 px-3 rounded w-52"
+        onClick={() => {
+          openPopupAddLeaveRequest();
+          fetchData();
+        }}
+      >
+        Add
+      </button>
+
+      {showPopupAddLeaveRequest && (
+        <AddLeaveRequest
+          onClose={closePopupAddLeaveRequest}
+          onRefresh={fetchData}
+        />
+      )}
+
+      {error && (
+        <div className="text-red-600 font-bold">
+          Error deleting Leave Request.
+        </div>
+      )}
 
       <table className="table-auto">
         <thead>
@@ -76,7 +99,7 @@ function LeaveRequest() {
             <th className="px-4 py-2">Employee Id</th>
             <th className="px-4 py-2">Start Date</th>
             <th className="px-4 py-2">End Date</th>
-            <th className="px-4 py-2">Hours off Requeted</th>
+            <th className="px-4 py-2">Hours off Requested</th>
             <th className="px-4 py-2">Status</th>
           </tr>
         </thead>
@@ -89,22 +112,15 @@ function LeaveRequest() {
               <td className="px-4 py-2">{item.hours_off_requested}</td>
               <td className="px-4 py-2">{item.status}</td>
               <td className="flex flex-row px-4 py-2 justify-center">
-                  <div className="m-4 cursor-pointer">
-                    <Image
-                      src={Pencil}
-                      alt="Edit Icon"
-                      width={20}
-                      height={20}
-                    />
-                  </div>
-                  <div className="m-4 cursor-pointer" onClick={() => deleteLeaveRequest(item.id)}>
-                    <Image
-                      src={Trash}
-                      alt="Trash Icon"
-                      width={20}
-                      height={20}
-                    />
-                  </div>
+                <div className="m-4 cursor-pointer">
+                  <Image src={Pencil} alt="Edit Icon" width={20} height={20} />
+                </div>
+                <div
+                  className="m-4 cursor-pointer"
+                  onClick={() => deleteLeaveRequest(item.id)}
+                >
+                  <Image src={Trash} alt="Trash Icon" width={20} height={20} />
+                </div>
               </td>
             </tr>
           ))}
@@ -112,7 +128,6 @@ function LeaveRequest() {
       </table>
     </div>
   );
-  
 }
 
 export default LeaveRequest;

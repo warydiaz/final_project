@@ -40,11 +40,26 @@ export interface RequestWithEmployeeId extends Request {
     employeeId: number;
 }
 
+router.use("userid/:userid", async (req: Request, res, next) => {
+  const userid = req.body;
+  req.userid = userid.userid;
+  next();
+});
+
 router.use("/:id", async (req: RequestWithEmployeeId, res, next) => {
   const { id } = req.params;
   req.employeeId = Number(id);
   next();
 });
+
+
+router.post(
+  "/:userid",
+  errorChecked(async (req: Request, res) => {
+    const employee = await employeeServicesQuery.getAEmployeeByUserId(req.body.userid);
+    res.status(200).json(employee);
+  })
+);
 
 router.get(
   "/:id",

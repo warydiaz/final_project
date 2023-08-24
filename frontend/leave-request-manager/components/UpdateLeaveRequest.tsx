@@ -1,25 +1,51 @@
 "use client";
 import axios from "axios";
 import React, { FormEventHandler, useState, useEffect } from "react";
-
+import { LeaveRequest } from "./types";
 
 interface AddLeaveRequestProps {
   onClose: () => void;
   onRefresh: () => void;
-  id:number
+  id: number;
 }
 
-export default function AddLeaveRequest({
+export default function UpdateLeaveRequest({
   onClose,
   onRefresh,
-  id
+  id,
 }: AddLeaveRequestProps) {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [hoursOffRequested, setHoursOffRequested] = useState(0);
   const [error, setError] = useState<boolean>(false);
 
-  const AddLeaveRequest = async () => {
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const leaveRequestResponse = await axios.get(
+        `http://localhost:3001/leaveRequest/${id}`
+      );
+      const leaveRequest: LeaveRequest = leaveRequestResponse.data;
+
+      if (!leaveRequest) {
+        setError(true);
+      } else {
+        const start = leaveRequest.start_date.substring(0, 10);
+        const end = leaveRequest.end_date.substring(0, 10);
+  
+        setStartDate(start);
+        setEndDate(end);
+        setHoursOffRequested(leaveRequest.hours_off_requested);
+      }
+    } catch (error) {
+      console.error("Error updating data:", error);
+    }
+  };
+
+  const updateLeaveRequest = async () => {
     if (
       startDate.trim() === "" ||
       endDate.trim() === "" ||
@@ -28,21 +54,18 @@ export default function AddLeaveRequest({
       setError(true);
       return;
     }
-
     try {
-      const addLeaveRequestResponse = await axios.post(
-        `http://localhost:3001/leaveRequest`,
+      const updateLeaveRequestResponse = await axios.put(
+        `http://localhost:3001/leaveRequest/${id}`,
         {
-          employeeId: id,
           startDate: startDate,
           endtDate: endDate,
           hours_off_requeted: hoursOffRequested,
-          status: "Requested",
         }
       );
-      const wasAdded: boolean = addLeaveRequestResponse.data.ok;
+      const updated: boolean = updateLeaveRequestResponse.data.ok;
 
-      if (!wasAdded) {
+      if (!updated) {
         setError(true);
       } else {
         setError(false);
@@ -50,7 +73,7 @@ export default function AddLeaveRequest({
         onRefresh();
       }
     } catch (error) {
-      console.error("Error adding data:", error);
+      console.error("Error updating data:", error);
     }
   };
 
@@ -112,9 +135,9 @@ export default function AddLeaveRequest({
             </button>
             <button
               className="bg-stone-200 py-1 px-3 rounded"
-              onClick={AddLeaveRequest}
+              onClick={updateLeaveRequest}
             >
-              Add
+              Update
             </button>
           </div>
         </form>

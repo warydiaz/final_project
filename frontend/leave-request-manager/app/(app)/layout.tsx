@@ -17,6 +17,7 @@ export default function RootLayout({
       <div className="flex h-screen">
       <LeftPanel />
       </div>
+      {children}
     </>
   );
 }

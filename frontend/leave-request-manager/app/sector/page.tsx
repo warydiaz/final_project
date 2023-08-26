@@ -12,8 +12,6 @@ export default async function Section() {
     redirect("/login");
   }
   return (
-    <main className="p-6">
-     
-    </main>
+    <></>
   );
 }

@@ -20,6 +20,7 @@ export default function RootLayout({
         <LeftPanel  />
         <LeaveRequest />
       </div>
+      {children}
     </>
   );
 }

@@ -1,16 +1,16 @@
 import { redirect } from "next/navigation";
-import {getUser} from "../userData";
+import { getUser } from "../userData";
 
 export const revalidate = 0;
 
 export default async function LeaveRequest() {
  
-  const data  = getUser();
+  const data  = (await getUser()).user;
 
-  if (!data.user) {
+  if (!data) {
     redirect("/login");
   }
   return (
-    <></>
+   <></>
   );
 }

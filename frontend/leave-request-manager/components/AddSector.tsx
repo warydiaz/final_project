@@ -59,7 +59,7 @@ export default function AddSector({ onClose, onRefresh }: AddSectorProps) {
               type="string"
               value={sector}
               onChange={(e) => setSector(e.target.value)}
-              className="border"
+              className="border py-2 px-4"
             />
           </label>
           <div className="flex justify-around">

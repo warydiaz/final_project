@@ -102,7 +102,7 @@ export default function UpdateLeaveRequest({
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="border"
+              className="border py-2 px-4"
             />
           </label>
 
@@ -112,7 +112,7 @@ export default function UpdateLeaveRequest({
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="border"
+              className="border py-2 px-4"
             />
           </label>
 

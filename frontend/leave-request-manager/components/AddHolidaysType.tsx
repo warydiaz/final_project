@@ -79,7 +79,7 @@ export default function AddHolidaysType({
               type="string"
               value={country}
               onChange={(e) => setCountry(e.target.value)}
-              className="border"
+              className="border py-2 px-4"
             />
           </label>
           <label className="flex flex-col gap-2 mb-2">
@@ -88,7 +88,7 @@ export default function AddHolidaysType({
               type="number"
               value={amountOfDaysOff}
               onChange={(e) => setAmountOfDaysOff(parseInt(e.target.value))}
-              className="border"
+              className="border py-2 px-4"
             />
           </label>
           <label className="flex flex-col gap-2 mb-2">
@@ -97,7 +97,7 @@ export default function AddHolidaysType({
               type="string"
               value={nameOfTypeDaysOff}
               onChange={(e) => setNameOfTypeDaysOff(e.target.value)}
-              className="border"
+              className="border py-2 px-4"
             />
           </label>
           <div className="flex justify-around">

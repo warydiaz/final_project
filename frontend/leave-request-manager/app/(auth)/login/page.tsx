@@ -30,7 +30,7 @@ export default function Page() {
 
   return (
     <main className="w-screen h-screen flex flex-col justify-center items-center">
-      <h1 className="text-2xl font-bold">Login Page</h1>
+      <h1 className="text-2xl font-bold">Login</h1>
       <form onSubmit={formSubmit} className="flex flex-col border p-4 rounded">
         <label className="flex flex-col gap-2 mb-2">
           <span>Email:</span>

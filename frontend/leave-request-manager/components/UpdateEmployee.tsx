@@ -13,7 +13,7 @@ interface UpdateEmployeeProps {
   employeeId: number;
 }
 
-export default function AddEmployee({
+export default function UpdateEmployee({
   onClose,
   onRefresh,
   employeeId,
@@ -105,7 +105,7 @@ export default function AddEmployee({
     setDocumentType(documentType.id);
   };
 
-  const addEmployee = async () => {
+  const updateEmployee = async () => {
     if (
       name.trim() === "" ||
       sector === 0 ||
@@ -117,7 +117,7 @@ export default function AddEmployee({
     }
 
     try {
-      const addEmployeeResponse = await axios.put(
+      const updateEmployeeResponse = await axios.put(
         `http://localhost:3001/employee/${employeeId}`,
         {
           userid: email,
@@ -130,7 +130,7 @@ export default function AddEmployee({
           employee_Sector: sector,
         }
       );
-      const wasAdded: boolean = addEmployeeResponse.data;
+      const wasAdded: boolean = updateEmployeeResponse.data;
 
       if (!wasAdded) {
         setError(true);
@@ -154,9 +154,7 @@ export default function AddEmployee({
         <h2 className="text-lg font-semibold mb-2">Update Employee</h2>
 
         {error && (
-          <div className="text-red-600 font-bold">
-            Error Updating Employee.
-          </div>
+          <div className="text-red-600 font-bold">Error Updating Employee.</div>
         )}
 
         <form
@@ -169,12 +167,12 @@ export default function AddEmployee({
               type="string"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="border"
+              className="border py-2 px-4"
             />
           </label>
           <label className="flex flex-col gap-2 mb-2">
             <span>Sector:</span>
-            <DropDownSector data={dataSector} onSelect={selectSector} />
+            <DropDownSector data={dataSector}  selectedId={sector} onSelect={selectSector} />
           </label>
 
           <label className="flex flex-col gap-2 mb-2">
@@ -183,7 +181,7 @@ export default function AddEmployee({
               type="string"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="border"
+              className="border py-2 px-4"
             />
           </label>
 
@@ -191,6 +189,7 @@ export default function AddEmployee({
             <span>Holidays Type:</span>
             <DropDownHolidaysType
               data={dataHolidaysType}
+              selectedId={holidaysType}
               onSelect={selectHolidaysType}
             />
           </label>
@@ -200,8 +199,8 @@ export default function AddEmployee({
             <input
               type="number"
               value={currentHoursOff}
-              onChange={(e) => setEmail(e.target.value)}
-              className="border"
+              className="border py-2 px-4"
+              readOnly
             />
           </label>
 
@@ -209,6 +208,7 @@ export default function AddEmployee({
             <span>Document Type:</span>
             <DropDownDocumentType
               data={dataDocumentType}
+              selectedId={documentType}
               onSelect={selectDocumentType}
             />
           </label>
@@ -219,7 +219,7 @@ export default function AddEmployee({
               type="string"
               value={documentNumber}
               onChange={(e) => setDocumentNumber(e.target.value)}
-              className="border"
+              className="border py-2 px-4"
             />
           </label>
 
@@ -232,7 +232,7 @@ export default function AddEmployee({
             </button>
             <button
               className="bg-stone-200 py-1 px-3 rounded"
-              onClick={addEmployee}
+              onClick={updateEmployee}
             >
               Update
             </button>

@@ -2,17 +2,16 @@
 import axios from "axios";
 import React, { FormEventHandler, useState, useEffect } from "react";
 
-
 interface AddLeaveRequestProps {
   onClose: () => void;
   onRefresh: () => void;
-  id:number
+  id: number;
 }
 
 export default function AddLeaveRequest({
   onClose,
   onRefresh,
-  id
+  id,
 }: AddLeaveRequestProps) {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -79,7 +78,7 @@ export default function AddLeaveRequest({
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="border"
+              className="border py-2 px-4"
             />
           </label>
 
@@ -89,7 +88,7 @@ export default function AddLeaveRequest({
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="border"
+              className="border py-2 px-4"
             />
           </label>
 
@@ -99,7 +98,7 @@ export default function AddLeaveRequest({
               type="number"
               value={hoursOffRequested}
               onChange={(e) => setHoursOffRequested(parseFloat(e.target.value))}
-              className="border"
+              className="border py-2 px-4"
             />
           </label>
 

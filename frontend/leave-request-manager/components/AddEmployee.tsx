@@ -133,13 +133,14 @@ export default function AddEmployee({ onClose, onRefresh }: AddEmployeeProps) {
           onSubmit={formSubmit}
           className="flex flex-col border p-4 rounded"
         >
-          <label className="flex flex-col gap-2 mb-2">
+          
+          <label className="flex flex-col gap-2 mb-2"> 
             <span>Name:</span>
             <input
               type="string"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="border"
+              className="border py-2 px-4"
             />
           </label>
           <label className="flex flex-col gap-2 mb-2">
@@ -153,7 +154,7 @@ export default function AddEmployee({ onClose, onRefresh }: AddEmployeeProps) {
               type="string"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="border"
+              className="border py-2 px-4"
             />
           </label>
 
@@ -179,7 +180,7 @@ export default function AddEmployee({ onClose, onRefresh }: AddEmployeeProps) {
               type="string"
               value={documentNumber}
               onChange={(e) => setDocumentNumber(e.target.value)}
-              className="border"
+              className="border py-2 px-4"
             />
           </label>
 

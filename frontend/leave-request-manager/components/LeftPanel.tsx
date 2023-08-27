@@ -1,5 +1,5 @@
 import EmployeeLeftPanel from "./EmployeeLeftPanel";
-import SectorLeftPanel from "./SectorLeftPanel";
+import SectorLeftPanel from "./Sector_positionLeftPanel";
 import HolidaysTypeLeftPanel from "./holidaysTypeLeftPanel";
 import LeaveRequestLeftPanel from "./leaveRequestLeftPanel"
 

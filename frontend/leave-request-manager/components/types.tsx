@@ -4,6 +4,13 @@
     created_at: Date;
   }
 
+  export interface Position {
+    id: number;
+    name: string;
+    created_at: Date;
+  }
+
+
   export interface HolidaysType {
     id: number;
     name: string;

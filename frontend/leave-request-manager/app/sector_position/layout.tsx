@@ -1,8 +1,8 @@
 import Header from "@/components/Header";
 import LeftPanel from "@/components/LeftPanel";
-import Sector from "@/components/Sector";
+import Sector from "@/components/Sector_position";
 export const metadata = {
-  title: "Sector",
+  title: "Sector & Position",
   description: "Vistagaming Leave Request Manager",
 };
 

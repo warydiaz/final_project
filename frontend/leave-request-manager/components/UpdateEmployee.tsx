@@ -4,8 +4,8 @@ import React, { FormEventHandler, useState, useEffect } from "react";
 import DropDownSector from "./DropDownSector";
 import DropDownHolidaysType from "./DropDownHolidaysType";
 import DropDownDocumentType from "./DropDownDocumentType";
-
-import { HolidaysType, Sector, DocumentType, Employee } from "./types";
+import { HolidaysType, Sector, DocumentType, Employee, Position } from "./types";
+import DropDownPosition from "./DropDownPosition";
 
 interface UpdateEmployeeProps {
   onClose: () => void;
@@ -20,7 +20,7 @@ export default function UpdateEmployee({
 }: UpdateEmployeeProps) {
   const [name, setName] = useState("");
   const [sector, setSector] = useState(0);
-  const [positionName, setPositionName] = useState("");
+  const [positionName, setPositionName] = useState(0);
   const [documentType, setDocumentType] = useState(0);
   const [documentNumber, setDocumentNumber] = useState("");
   const [holidaysType, setHolidaysType] = useState(0);
@@ -28,14 +28,16 @@ export default function UpdateEmployee({
   const [email, setEmail] = useState("");
   const [error, setError] = useState<boolean>(false);
   const [dataSector, setDataSector] = useState<Sector[]>([]);
+  const [dataPosition, setDataPosition] = useState<Position[]>([]);
   const [dataHolidaysType, setDataHolidaysType] = useState<HolidaysType[]>([]);
   const [dataDocumentType, setDataDocumentType] = useState<DocumentType[]>([]);
 
   useEffect(() => {
-    fetchDataEmployee();
     fetchDataSector();
     fetchDataHolidaysType();
     fetchDataDocumetType();
+    fetchDataPositions();
+    fetchDataEmployee();
   }, []);
 
   const fetchDataSector = async () => {
@@ -74,12 +76,26 @@ export default function UpdateEmployee({
     }
   };
 
+  const fetchDataPositions = async () => {
+    try {
+      const response = await axios.get<{ sector: Position[] }>(
+        `http://localhost:3001/position`
+      );
+      const jsonData: Position[] = response.data.Position;
+      setDataPosition(jsonData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+
   const fetchDataEmployee = async () => {
     try {
       const response = await axios.get<{ employee: Employee }>(
         `http://localhost:3001/employee/${employeeId}`
       );
       const jsonData: Employee = response.data;
+
       setName(jsonData.name);
       setSector(jsonData.employee_Sector);
       setPositionName(jsonData.position_name)
@@ -95,6 +111,10 @@ export default function UpdateEmployee({
 
   const selectSector = (sector: Sector) => {
     setSector(sector.id);
+  };
+
+  const selectPosition = (position: Position) => {
+    setPositionName(position.id);
   };
 
   const selectHolidaysType = (holidaysType: HolidaysType) => {
@@ -175,14 +195,9 @@ export default function UpdateEmployee({
             <DropDownSector data={dataSector}  selectedId={sector} onSelect={selectSector} />
           </label>
 
-          <label className="flex flex-col gap-2 mb-2"> 
-            <span>Position Name:</span>
-            <input
-              type="string"
-              value={positionName}
-              onChange={(e) => setPositionName(e.target.value)}
-              className="border py-2 px-4"
-            />
+          <label className="flex flex-col gap-2 mb-2">
+            <span>Position:</span>
+            <DropDownPosition data={dataPosition} selectedId={positionName}onSelect={selectPosition} />
           </label>
 
           <label className="flex flex-col gap-2 mb-2">

@@ -5,7 +5,7 @@ import DropDownSector from "./DropDownSector";
 import DropDownHolidaysType from "./DropDownHolidaysType";
 import DropDownDocumentType from "./DropDownDocumentType";
 
-import { HolidaysType, Sector, DocumentType } from "./types";
+import { HolidaysType, Sector, DocumentType, Position } from "./types";
 
 interface AddEmployeeProps {
   onClose: () => void;
@@ -15,13 +15,14 @@ interface AddEmployeeProps {
 export default function AddEmployee({ onClose, onRefresh }: AddEmployeeProps) {
   const [name, setName] = useState("");
   const [sector, setSector] = useState(0);
-  const [positionName, setPositionName] = useState("");
+  const [position, setPosition] = useState(0);
   const [documentType, setDocumentType] = useState(0);
   const [documentNumber, setDocumentNumber] = useState("");
   const [holidaysType, setHolidaysType] = useState(0);
   const [email, setEmail] = useState("");
   const [error, setError] = useState<boolean>(false);
   const [dataSector, setDataSector] = useState<Sector[]>([]);
+  const [dataPosition, setDataPosition] = useState<Sector[]>([]);
   const [dataHolidaysType, setDataHolidaysType] = useState<HolidaysType[]>([]);
   const [dataDocumentType, setDataDocumentType] = useState<DocumentType[]>([]);
 
@@ -29,6 +30,7 @@ export default function AddEmployee({ onClose, onRefresh }: AddEmployeeProps) {
     fetchDataSector();
     fetchDataHolidaysType();
     fetchDataDocumetType();
+    fetchDataPosition();
   }, []);
 
   const fetchDataSector = async () => {
@@ -38,6 +40,18 @@ export default function AddEmployee({ onClose, onRefresh }: AddEmployeeProps) {
       );
       const jsonData: Sector[] = response.data.sector;
       setDataSector(jsonData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const fetchDataPosition = async () => {
+    try {
+      const response = await axios.get<{ position: Position[] }>(
+        `http://localhost:3001/position`
+      );
+      const jsonData: Position[] = response.data.Position;
+      setDataPosition(jsonData);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -71,6 +85,10 @@ export default function AddEmployee({ onClose, onRefresh }: AddEmployeeProps) {
     setSector(sector.id);
   };
 
+  const selectPosition = (position: Position) => {
+    setPosition(position.id);
+  };
+
   const selectHolidaysType = (holidaysType: HolidaysType) => {
     setHolidaysType(holidaysType.id);
   };
@@ -94,7 +112,7 @@ export default function AddEmployee({ onClose, onRefresh }: AddEmployeeProps) {
           document_type: documentType,
           document_number: documentNumber,
           current_hours_off: 0,
-          position_name: positionName,
+          position_name: position,
           holidays_typeId: holidaysType,
           employee_Sector: sector,
         }
@@ -147,14 +165,9 @@ export default function AddEmployee({ onClose, onRefresh }: AddEmployeeProps) {
             <DropDownSector data={dataSector} onSelect={selectSector} />
           </label>
 
-          <label className="flex flex-col gap-2 mb-2"> 
-            <span>Position Name:</span>
-            <input
-              type="string"
-              value={positionName}
-              onChange={(e) => setPositionName(e.target.value)}
-              className="border py-2 px-4"
-            />
+          <label className="flex flex-col gap-2 mb-2">
+            <span>Position:</span>
+            <DropDownSector data={dataPosition} onSelect={selectPosition} />
           </label>
 
           <label className="flex flex-col gap-2 mb-2">

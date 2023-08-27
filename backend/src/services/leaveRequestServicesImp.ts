@@ -88,7 +88,8 @@ export class LeaveRequestServicesImp implements LeaveRequestServices {
     try {
       const { data, error }: PostgrestResponse<LeaveRequest> = await supabase
         .from("Leave_request")
-        .insert([leaveRequest.getObjLeaveRequest()]);
+        .insert([leaveRequest.getObjLeaveRequest()])
+        .select()
 
       if (error) {
         console.error(`Error inserting LeaveRequest:`, error);

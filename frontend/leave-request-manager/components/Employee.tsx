@@ -5,11 +5,13 @@ import Image from "next/image";
 import Pencil from "../app/icons/pencil.svg";
 import Trash from "../app/icons/trash.svg";
 import AddEmployee from "./AddEmployee";
-import { Employee } from "./types";
+import { Employee, Sector } from "./types";
 import UpdateEmployee from "./UpdateEmployee";
+//import Sector from "./Sector_position";
 
 function Employee() {
   const [data, setData] = useState<Employee[]>([]);
+  const [sectorData, setSectorData] = useState<Sector[]>([]);
   const [error, setError] = useState<boolean>(false);
   const [showPopupAddEmployee, setshowPopupAddEmployee] = useState(false);
   const [showPopupUpdateEmployee, setshowPopupUpdateEmployee] = useState(false);
@@ -20,6 +22,11 @@ function Employee() {
   }, []);
 
   const fetchData = async () => {
+    await getSectors();
+    await getEmployees();
+  };
+
+  const getEmployees = async () => {
     try {
       const response = await axios.get<{ employee: Employee[] }>(
         `http://localhost:3001/employee`
@@ -31,11 +38,34 @@ function Employee() {
     }
   };
 
+  const getSectors = async () => {
+    try {
+      const response = await axios.get<{ sector: Sector[] }>(
+        `http://localhost:3001/sector`
+      );
+      const jsonData: Sector[] = response.data.sector;
+      setSectorData(jsonData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const getNameSector = (id: number): string => {
+    const filtered = sectorData.find((aSector) => {
+      if (aSector.id == id) {
+        return aSector;
+      }
+    });
+
+    return filtered!.name;
+  };
+
   const deleteEmployee = async (employeeId: number) => {
     try {
       const deleteResponse = await axios.delete(
         `http://localhost:3001/employee/${employeeId}`
       );
+
       const wasDeleted: boolean = deleteResponse.data;
 
       if (!wasDeleted) {
@@ -50,12 +80,12 @@ function Employee() {
     }
   };
 
-  const openPopupUpdateEmployee = () => {
-    setshowPopupUpdateEmployee(true);
-  };
-
   const closePopupUpdateEmployee = () => {
     setshowPopupUpdateEmployee(false);
+  };
+
+  const openPopupUpdateEmployee = () => {
+    setshowPopupUpdateEmployee(true);
   };
 
   const openPopupAddEmployee = () => {
@@ -82,6 +112,7 @@ function Employee() {
       {error && (
         <div className="text-red-600 font-bold">Error deleting Employee.</div>
       )}
+
       {showPopupAddEmployee && (
         <AddEmployee onClose={closePopupAddEmployee} onRefresh={fetchData} />
       )}
@@ -106,7 +137,9 @@ function Employee() {
           {data.map((item, index) => (
             <tr key={item.id} className="border text-center">
               <td className="px-4 py-2">{item.name}</td>
-              <td className="px-4 py-2">{item.position_name}</td>
+              <td className="px-4 py-2">
+                {getNameSector(item.employee_Sector)}
+              </td>
               <td className="px-4 py-2">{item.userid}</td>
               <td
                 className="flex flex-row px-4 py-2 justify-center"
@@ -118,6 +151,8 @@ function Employee() {
                 <div className="m-4 cursor-pointer">
                   <Image src={Pencil} alt="Edit Icon" width={20} height={20} />
                 </div>
+                </td>
+                <td>
                 <div
                   className="m-4 cursor-pointer"
                   onClick={() => deleteEmployee(item.id)}

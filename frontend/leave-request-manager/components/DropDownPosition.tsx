@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Sector } from './types';
+import { Position } from './types';
 
 interface DropdownProps {
-  data: Sector[];
+  data: Position[];
   selectedId?: number; 
-  onSelect: (selectedItem: Sector) => void;
+  onSelect: (selectedItem: Position) => void;
 }
 
-export default function DropDownSector({
+export default function DropDownPosition({
   data,
   selectedId,
   onSelect,
 }: DropdownProps) {
-  const [selectedItem, setSelectedItem] = useState<Sector | null>(null);
+  const [selectedItem, setSelectedItem] = useState<Position | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const handleSelect = (item: Sector) => {
+  const handleSelect = (item: Position) => {
     setSelectedItem(item);
     onSelect(item);
     toggleDropdown();
@@ -51,7 +51,7 @@ export default function DropDownSector({
         className="block w-full px-4 py-2 text-left bg-white border rounded shadow-sm focus:ring focus:ring-opacity-50"
         onClick={toggleDropdown}
       >
-        {selectedItem ? selectedItem.name : 'Select a Sector'}
+        {selectedItem ? selectedItem.name : 'Select a Position'}
       </button>
       {isOpen && (
         <ul className="absolute w-full py-2 mt-1 space-y-1 bg-white border rounded shadow-sm">

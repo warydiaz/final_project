@@ -5,7 +5,7 @@ export class Employee {
   public document_type: number;
   public document_number: string;
   public current_hours_off: number;
-  public position_name: string;
+  public position_name: number;
   public employee_Sector: Number;
   public holidays_type: Number;
 
@@ -15,7 +15,7 @@ export class Employee {
     document_type: number,
     document_number: string,
     current_hours_off: number,
-    position_name: string,
+    position_name: number,
     employee_Sector: Number,
     holidays_type: Number
   ) {

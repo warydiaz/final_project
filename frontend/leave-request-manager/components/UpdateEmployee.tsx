@@ -20,7 +20,7 @@ export default function UpdateEmployee({
 }: UpdateEmployeeProps) {
   const [name, setName] = useState("");
   const [sector, setSector] = useState(0);
-  const [sectorName, setSectorName] = useState("");
+  const [positionName, setPositionName] = useState("");
   const [documentType, setDocumentType] = useState(0);
   const [documentNumber, setDocumentNumber] = useState("");
   const [holidaysType, setHolidaysType] = useState(0);
@@ -82,6 +82,7 @@ export default function UpdateEmployee({
       const jsonData: Employee = response.data;
       setName(jsonData.name);
       setSector(jsonData.employee_Sector);
+      setPositionName(jsonData.position_name)
       setDocumentType(jsonData.document_type);
       setDocumentNumber(jsonData.document_number);
       setHolidaysType(jsonData.holidays_typeId);
@@ -94,7 +95,6 @@ export default function UpdateEmployee({
 
   const selectSector = (sector: Sector) => {
     setSector(sector.id);
-    setSectorName(sector.name);
   };
 
   const selectHolidaysType = (holidaysType: HolidaysType) => {
@@ -125,7 +125,7 @@ export default function UpdateEmployee({
           document_type: documentType,
           document_number: documentNumber,
           current_hours_off: currentHoursOff,
-          position_name: sectorName,
+          position_name: positionName,
           holidays_typeId: holidaysType,
           employee_Sector: sector,
         }
@@ -173,6 +173,16 @@ export default function UpdateEmployee({
           <label className="flex flex-col gap-2 mb-2">
             <span>Sector:</span>
             <DropDownSector data={dataSector}  selectedId={sector} onSelect={selectSector} />
+          </label>
+
+          <label className="flex flex-col gap-2 mb-2"> 
+            <span>Position Name:</span>
+            <input
+              type="string"
+              value={positionName}
+              onChange={(e) => setPositionName(e.target.value)}
+              className="border py-2 px-4"
+            />
           </label>
 
           <label className="flex flex-col gap-2 mb-2">

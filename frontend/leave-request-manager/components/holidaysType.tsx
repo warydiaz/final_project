@@ -6,14 +6,8 @@ import Pencil from "../app/icons/pencil.svg";
 import Trash from "../app/icons/trash.svg";
 import AddHolidaysType from "./AddHolidaysType";
 import UpdateHolidaysType from "./UpdateHolidaysType";
+import {HolidaysType} from "./types";
 
-interface HolidaysType {
-  id: number;
-  name: string;
-  amount_of_days_off: number;
-  country: string;
-  created_at: Date;
-}
 
 function HolidaysType() {
   const [data, setData] = useState<HolidaysType[]>([]);

@@ -24,7 +24,6 @@ function Sector() {
   const [positionIdToUpdate, setPositionIdToUpdate] = useState(0);
   const [positionNameToUpdate, setPositionNameToUpdate] = useState("");
 
-
   const openPopupAddSector = () => {
     setshowPopupAddSector(true);
   };
@@ -200,7 +199,10 @@ function Sector() {
         </button>
 
         {showPopupAddPosition && (
-          <AddPosition onClose={closePopupAddPosition} onRefresh={refreshData} />
+          <AddPosition
+            onClose={closePopupAddPosition}
+            onRefresh={refreshData}
+          />
         )}
         {showPopupUpdatePosition && (
           <UpdatePosition

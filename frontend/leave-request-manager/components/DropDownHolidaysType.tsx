@@ -3,7 +3,7 @@ import { HolidaysType } from './types';
 
 interface DropdownProps {
   data: HolidaysType[];
-  selectedId?: number; // Nuevo prop para el ID seleccionado
+  selectedId?: number; 
   onSelect: (selectedItem: HolidaysType) => void;
 }
 

@@ -38,7 +38,7 @@ export const updateASector = async (
   }
 };
 
-export const addSector = async (name: string): Promise<boolean> => {
+export const addASector = async (name: string): Promise<boolean> => {
   try {
     const addSectorResponse = await axios.post(`${API_URL}/sector`, {
       name: name,
@@ -136,7 +136,7 @@ export const deletePosition = async (positionId: number): Promise<boolean> => {
   }
 };
 
-export const addPosition = async (name: string): Promise<boolean> => {
+export const addAPosition = async (name: string): Promise<boolean> => {
   try {
     const addPositionResponse = await axios.post(`${API_URL}/Position`, {
       name: name,
@@ -211,7 +211,7 @@ export const deleteEmployee = async (employeeId: number): Promise<boolean> => {
   }
 };
 
-export const addEmployee = async (
+export const addAEmployee = async (
   email: string,
   name: string,
   documentType: number,
@@ -308,7 +308,7 @@ export const fetchALeaveRequest = async (id: number): Promise<LeaveRequest> => {
   }
 };
 
-export const AddLeaveRequest = async (
+export const AddALeaveRequest = async (
   id: number,
   startDate: string,
   endDate: string,
@@ -334,11 +334,11 @@ export const AddLeaveRequest = async (
   }
 };
 
-export const addHolidaysType = async (
+export const addAHolidaysType = async (
   country: string,
   amountOfDaysOff: number,
   nameOfTypeDaysOff: string
-) => {
+) :Promise<Boolean> => {
   try {
     const addHolidaysTypeResponse = await axios.post(
       `${API_URL}//holidaysType`,

@@ -1,11 +1,16 @@
 "use client";
-import axios from "axios";
 import React, { FormEventHandler, useState, useEffect } from "react";
 import DropDownSector from "./DropDownSector";
 import DropDownHolidaysType from "./DropDownHolidaysType";
 import DropDownDocumentType from "./DropDownDocumentType";
-
 import { HolidaysType, Sector, DocumentType, Position } from "./types";
+import {
+  fetchSectors,
+  fetchPositions,
+  fetchHolidaysType,
+  fetchDocumetType,
+  addAEmployee,
+} from "../services/api";
 
 interface AddEmployeeProps {
   onClose: () => void;
@@ -34,51 +39,23 @@ export default function AddEmployee({ onClose, onRefresh }: AddEmployeeProps) {
   }, []);
 
   const fetchDataSector = async () => {
-    try {
-      const response = await axios.get<{ sector: Sector[] }>(
-        `http://localhost:3001/sector`
-      );
-      const jsonData: Sector[] = response.data.sector;
-      setDataSector(jsonData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    const jsonData = await fetchSectors();
+    setDataSector(jsonData);
   };
 
   const fetchDataPosition = async () => {
-    try {
-      const response = await axios.get<{ position: Position[] }>(
-        `http://localhost:3001/position`
-      );
-      const jsonData: Position[] = response.data.Position;
-      setDataPosition(jsonData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    const jsonData: Position[] = await fetchPositions();
+    setDataPosition(jsonData);
   };
 
   const fetchDataHolidaysType = async () => {
-    try {
-      const response = await axios.get<{ holidaysType: HolidaysType[] }>(
-        `http://localhost:3001/holidaysType`
-      );
-      const jsonData: HolidaysType[] = response.data.holidaysType;
-      setDataHolidaysType(jsonData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    const jsonData = await fetchHolidaysType();
+    setDataHolidaysType(jsonData);
   };
 
   const fetchDataDocumetType = async () => {
-    try {
-      const response = await axios.get<{ documentType: DocumentType[] }>(
-        `http://localhost:3001/documentType`
-      );
-      const jsonData: DocumentType[] = response.data.documentType;
-      setDataDocumentType(jsonData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    const jsonData = await fetchDocumetType();
+    setDataDocumentType(jsonData);
   };
 
   const selectSector = (sector: Sector) => {
@@ -98,26 +75,26 @@ export default function AddEmployee({ onClose, onRefresh }: AddEmployeeProps) {
   };
 
   const addEmployee = async () => {
-    if (name.trim() === "" || sector === 0 || email.trim() === "" || documentNumber.trim() === "") {
+    if (
+      name.trim() === "" ||
+      sector === 0 ||
+      email.trim() === "" ||
+      documentNumber.trim() === ""
+    ) {
       setError(true);
       return;
     }
 
     try {
-      const addEmployeeResponse = await axios.post(
-        `http://localhost:3001/employee`,
-        {
-          userid: email,
-          name: name,
-          document_type: documentType,
-          document_number: documentNumber,
-          current_hours_off: 0,
-          position_name: position,
-          holidays_typeId: holidaysType,
-          employee_Sector: sector,
-        }
+      const wasAdded: boolean = await addAEmployee(
+        email,
+        name,
+        documentType,
+        documentNumber,
+        position,
+        holidaysType,
+        sector
       );
-      const wasAdded: boolean = addEmployeeResponse.data.ok;
 
       if (!wasAdded) {
         setError(true);
@@ -150,8 +127,7 @@ export default function AddEmployee({ onClose, onRefresh }: AddEmployeeProps) {
           onSubmit={formSubmit}
           className="flex flex-col border p-4 rounded"
         >
-          
-          <label className="flex flex-col gap-2 mb-2"> 
+          <label className="flex flex-col gap-2 mb-2">
             <span>Name:</span>
             <input
               type="string"

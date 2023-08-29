@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import { addAPosition } from "../services/api";
 import React, { FormEventHandler, useState } from "react";
 
 interface AddPositionProps {
@@ -17,22 +17,14 @@ export default function AddPosition({ onClose, onRefresh }: AddPositionProps) {
       return;
     }
 
-    try {
-      const addPositionResponse = await axios.post(
-        `http://localhost:3001/Position`,
-        { "name": position }
-      );
-      const wasAdded: boolean = addPositionResponse.data.ok;
+    const wasAdded = await addAPosition(position);
 
-      if (!wasAdded) {
-        setError(true);
-      } else {
-        setError(false);
-        onClose();
-        onRefresh();
-      }
-    } catch (error) {
-      console.error("Error adding data:", error);
+    if (!wasAdded) {
+      setError(true);
+    } else {
+      setError(false);
+      onClose();
+      onRefresh();
     }
   };
 

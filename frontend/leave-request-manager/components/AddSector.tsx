@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import { addASector } from "../services/api";
 import React, { FormEventHandler, useState } from "react";
 
 interface AddSectorProps {
@@ -16,23 +16,14 @@ export default function AddSector({ onClose, onRefresh }: AddSectorProps) {
       setError(true);
       return;
     }
+    const wasAdded = await addASector(sector);
 
-    try {
-      const addSectorResponse = await axios.post(
-        `http://localhost:3001/sector`,
-        { "name": sector }
-      );
-      const wasAdded: boolean = addSectorResponse.data.ok;
-
-      if (!wasAdded) {
-        setError(true);
-      } else {
-        setError(false);
-        onClose();
-        onRefresh();
-      }
-    } catch (error) {
-      console.error("Error adding data:", error);
+    if (!wasAdded) {
+      setError(true);
+    } else {
+      setError(false);
+      onClose();
+      onRefresh();
     }
   };
 

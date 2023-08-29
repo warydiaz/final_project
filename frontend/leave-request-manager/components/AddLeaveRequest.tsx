@@ -1,6 +1,6 @@
 "use client";
-import axios from "axios";
 import React, { FormEventHandler, useState, useEffect } from "react";
+import { AddALeaveRequest } from "../services/api";
 
 interface AddLeaveRequestProps {
   onClose: () => void;
@@ -28,28 +28,19 @@ export default function AddLeaveRequest({
       return;
     }
 
-    try {
-      const addLeaveRequestResponse = await axios.post(
-        `http://localhost:3001/leaveRequest`,
-        {
-          employeeId: id,
-          startDate: startDate,
-          endtDate: endDate,
-          hours_off_requeted: hoursOffRequested,
-          status: "Requested",
-        }
-      );
-      const wasAdded: boolean = addLeaveRequestResponse.data.ok;
+    const wasAdded = await AddALeaveRequest(
+      id,
+      startDate,
+      endDate,
+      hoursOffRequested
+    );
 
-      if (!wasAdded) {
-        setError(true);
-      } else {
-        setError(false);
-        onClose();
-        onRefresh();
-      }
-    } catch (error) {
-      console.error("Error adding data:", error);
+    if (!wasAdded) {
+      setError(true);
+    } else {
+      setError(false);
+      onClose();
+      onRefresh();
     }
   };
 

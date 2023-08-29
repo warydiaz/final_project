@@ -1,6 +1,6 @@
 "use client";
-import axios from "axios";
 import React, { FormEventHandler, useState } from "react";
+import { addAHolidaysType } from "../services/api";
 
 interface AddSectorProps {
   onClose: () => void;
@@ -18,41 +18,26 @@ export default function AddHolidaysType({
   const [error, setError] = useState<boolean>(false);
 
   const addHolidaysType = async () => {
-    if (country.trim() === "") {
+    if (
+      country.trim() === "" ||
+      nameOfTypeDaysOff.trim() === "" ||
+      nameOfTypeDaysOff.trim() === ""
+    ) {
       setError(true);
       return;
     }
+    const wasAdded = await addAHolidaysType(
+      country,
+      amountOfDaysOff,
+      nameOfTypeDaysOff
+    );
 
-    if (amountOfDaysOff === 0) {
+    if (!wasAdded) {
       setError(true);
-      return;
-    }
-
-    if (nameOfTypeDaysOff.trim() === "") {
-      setError(true);
-      return;
-    }
-
-    try {
-      const addHolidaysTypeResponse = await axios.post(
-        `http://localhost:3001/holidaysType`,
-        {
-          country: country,
-          amount_of_days_off: amountOfDaysOff,
-          name: nameOfTypeDaysOff,
-        }
-      );
-      const wasAdded: boolean = addHolidaysTypeResponse.data.ok;
-
-      if (!wasAdded) {
-        setError(true);
-      } else {
-        setError(false);
-        onClose();
-        onRefresh();
-      }
-    } catch (error) {
-      console.error("Error adding data:", error);
+    } else {
+      setError(false);
+      onClose();
+      onRefresh();
     }
   };
 
@@ -66,7 +51,9 @@ export default function AddHolidaysType({
         <h2 className="text-lg font-semibold mb-2">Add a Holidays Type</h2>
 
         {error && (
-          <div className="text-red-600 font-bold">Error Adding a Holidays Type.</div>
+          <div className="text-red-600 font-bold">
+            Error Adding a Holidays Type.
+          </div>
         )}
 
         <form

@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import { updateASector } from "@/services/api";
 import React, { FormEventHandler, useState } from "react";
 
 interface UpdateSectorProps {
@@ -9,7 +9,12 @@ interface UpdateSectorProps {
   name: string;
 }
 
-export default function UpdateSector({ onClose, onRefresh, sectorId, name}: UpdateSectorProps) {
+export default function UpdateSector({
+  onClose,
+  onRefresh,
+  sectorId,
+  name,
+}: UpdateSectorProps) {
   const [sector, setSector] = useState(name);
   const [error, setError] = useState<boolean>(false);
 
@@ -19,22 +24,14 @@ export default function UpdateSector({ onClose, onRefresh, sectorId, name}: Upda
       return;
     }
 
-    try {
-      const updatedSectorResponse = await axios.put(
-        `http://localhost:3001/sector/${sectorId}`,
-        { "name": sector }
-      );
-      const wasUpdated: boolean = updatedSectorResponse.data;
-      
-      if (!wasUpdated) {
-        setError(true);
-      } else {
-        setError(false);
-        onClose();
-        onRefresh();
-      }
-    } catch (error) {
-      console.error("Error adding data:", error);
+    const wasUpdated = await updateASector(sectorId, sector);
+
+    if (!wasUpdated) {
+      setError(true);
+    } else {
+      setError(false);
+      onClose();
+      onRefresh();
     }
   };
 

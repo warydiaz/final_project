@@ -1,7 +1,6 @@
 "use client";
-import axios from "axios";
 import React, { FormEventHandler, useState, useEffect } from "react";
-import { LeaveRequest } from "./types";
+import { fetchALeaveRequest, updateALeaveRequest } from "@/services/api";
 
 interface AddLeaveRequestProps {
   onClose: () => void;
@@ -24,24 +23,17 @@ export default function UpdateLeaveRequest({
   }, []);
 
   const fetchData = async () => {
-    try {
-      const leaveRequestResponse = await axios.get(
-        `http://localhost:3001/leaveRequest/${id}`
-      );
-      const leaveRequest: LeaveRequest = leaveRequestResponse.data;
+    const leaveRequest = await fetchALeaveRequest(id);
 
-      if (!leaveRequest) {
-        setError(true);
-      } else {
-        const start = leaveRequest.start_date.substring(0, 10);
-        const end = leaveRequest.end_date.substring(0, 10);
-  
-        setStartDate(start);
-        setEndDate(end);
-        setHoursOffRequested(leaveRequest.hours_off_requested);
-      }
-    } catch (error) {
-      console.error("Error updating data:", error);
+    if (!leaveRequest) {
+      setError(true);
+    } else {
+      const start = leaveRequest.start_date.substring(0, 10);
+      const end = leaveRequest.end_date.substring(0, 10);
+
+      setStartDate(start);
+      setEndDate(end);
+      setHoursOffRequested(leaveRequest.hours_off_requested);
     }
   };
 
@@ -54,26 +46,20 @@ export default function UpdateLeaveRequest({
       setError(true);
       return;
     }
-    try {
-      const updateLeaveRequestResponse = await axios.put(
-        `http://localhost:3001/leaveRequest/${id}`,
-        {
-          startDate: startDate,
-          endtDate: endDate,
-          hours_off_requeted: hoursOffRequested,
-        }
-      );
-      const updated: boolean = updateLeaveRequestResponse.data.ok;
 
-      if (!updated) {
-        setError(true);
-      } else {
-        setError(false);
-        onClose();
-        onRefresh();
-      }
-    } catch (error) {
-      console.error("Error updating data:", error);
+    const updated = await updateALeaveRequest(
+      id,
+      startDate,
+      endDate,
+      hoursOffRequested
+    );
+
+    if (!updated) {
+      setError(true);
+    } else {
+      setError(false);
+      onClose();
+      onRefresh();
     }
   };
 

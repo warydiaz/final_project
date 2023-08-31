@@ -1,12 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Image from "next/image";
 import Pencil from "../app/icons/pencil.svg";
 import Trash from "../app/icons/trash.svg";
-import { LeaveRequest, Employee } from "./types";
 import AddLeaveRequest from "./AddLeaveRequest";
 import UpdateLeaveRequest from "./UpdateLeaveRequest";
+import {
+  fetchAEmployeeByUserId,
+  fetchLeaveRequest,
+  deleteALeaveRequest,
+} from "@/services/api";
 import {
   User,
   createClientComponentClient,
@@ -15,8 +18,10 @@ import {
 function LeaveRequest() {
   const [data, setData] = useState<any[]>([]);
   const [error, setError] = useState<boolean>(false);
-  const [showPopupAddLeaveRequest, setshowPopupAddLeaveRequest] = useState(false);
-  const [showPopupUpdateLeaveRequest, setshowPopupUpdateLeaveRequest] = useState(false);
+  const [showPopupAddLeaveRequest, setshowPopupAddLeaveRequest] =
+    useState(false);
+  const [showPopupUpdateLeaveRequest, setshowPopupUpdateLeaveRequest] =
+    useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [id, setId] = useState(0);
   const [leaveRequestId, setLeaveRequestId] = useState(0);
@@ -32,50 +37,32 @@ function LeaveRequest() {
   };
 
   const getId = async (userId: string) => {
-    try {
-      const addLeaveRequestResponse = await axios.post(
-        "http://localhost:3001/employee/userid",
-        {
-          userid: userId,
-        }
-      );
+    const exist = await fetchAEmployeeByUserId(userId);
 
-      const exist = addLeaveRequestResponse.data;
-
-      if (!exist) {
-        setError(true);
-      } else {
-        setError(false);
-        setId(exist.id);
-      }
-    } catch (error) {
-      console.error("Error adding data:", error);
+    if (!exist) {
+      setError(true);
+    } else {
+      setError(false);
+      setId(exist.id);
     }
   };
 
   const fetchData = async () => {
-    try {
-      const response = await axios.get<{ leaveRequest: LeaveRequest[] }>(
-        `http://localhost:3001/leaveRequest`
-      );
-      const jsonData: LeaveRequest[] = response.data.leaveRequest;
+    const jsonData = await fetchLeaveRequest();
 
-      const jsonDataProceced = jsonData.map((item) => ({
-        id: item.id,
-        employeeId: item.employeeId,
-        start_date: new Date(item.start_date).toLocaleDateString(),
-        end_date: new Date(item.end_date).toLocaleDateString(),
-        hours_off_requested: item.hours_off_requested,
-        status: item.status,
-      }));
+    const jsonDataProceced = jsonData.map((item) => ({
+      id: item.id,
+      employeeId: item.employeeId,
+      start_date: new Date(item.start_date).toLocaleDateString(),
+      end_date: new Date(item.end_date).toLocaleDateString(),
+      hours_off_requested: item.hours_off_requested,
+      status: item.status,
+    }));
 
-      setData(jsonDataProceced);
-      const user = await getUser();
-      setUser(user);
-      await getId(user!.email);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    setData(jsonDataProceced);
+    const user = await getUser();
+    setUser(user);
+    await getId(user!.email);
   };
 
   const openPopupAddLeaveRequest = () => {
@@ -91,21 +78,13 @@ function LeaveRequest() {
   };
 
   const deleteLeaveRequest = async (leaveRequestId: number) => {
-    try {
-      const deleteResponse = await axios.delete(
-        `http://localhost:3001/leaveRequest/${leaveRequestId}`
-      );
-      const wasDeleted: boolean = deleteResponse.data;
+    const wasDeleted = await deleteALeaveRequest(leaveRequestId);
 
-      if (!wasDeleted) {
-        setError(true);
-      } else {
-        setError(false);
-        fetchData();
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
+    if (!wasDeleted) {
       setError(true);
+    } else {
+      setError(false);
+      fetchData();
     }
   };
 
@@ -148,7 +127,6 @@ function LeaveRequest() {
       <table className="table-auto">
         <thead>
           <tr className="">
-            
             <th className="px-4 py-2">Start Date</th>
             <th className="px-4 py-2">End Date</th>
             <th className="px-4 py-2">Hours off Requested</th>

@@ -51,6 +51,17 @@ export const addASector = async (name: string): Promise<boolean> => {
   }
 };
 
+export const deleteASector = async (sectionId: number): Promise<boolean> => {
+  try {
+    const deleteResponse = await axios.delete(`${API_URL}/sector/${sectionId}`);
+    const wasDeleted: boolean = deleteResponse.data;
+    return wasDeleted;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+};
+
 export const fetchHolidaysType = async (): Promise<HolidaysType[]> => {
   try {
     const response = await axios.get<{ holidaysType: HolidaysType[] }>(
@@ -64,7 +75,7 @@ export const fetchHolidaysType = async (): Promise<HolidaysType[]> => {
   }
 };
 
-export const deleteHolidayType = async (holidayTypeId: number) => {
+export const deleteAHolidayType = async (holidayTypeId: number) => {
   try {
     const deleteResponse = await axios.delete(
       `${API_URL}/holidaysType/${holidayTypeId}`
@@ -104,7 +115,7 @@ export const fetchPositions = async (): Promise<Position[]> => {
   }
 };
 
-export const updatePosition = async (
+export const updateAPosition = async (
   positionId: number,
   position: string
 ): Promise<Boolean> => {
@@ -122,7 +133,7 @@ export const updatePosition = async (
   }
 };
 
-export const deletePosition = async (positionId: number): Promise<boolean> => {
+export const deleteAPosition = async (positionId: number): Promise<boolean> => {
   try {
     const deleteResponse = await axios.delete(
       `${API_URL}/position/${positionId}`
@@ -196,7 +207,7 @@ export const fetchAEmployeeByUserId = async (
   }
 };
 
-export const deleteEmployee = async (employeeId: number): Promise<boolean> => {
+export const deleteAEmployee = async (employeeId: number): Promise<boolean> => {
   try {
     const deleteResponse = await axios.delete(
       `${API_URL}/employee/${employeeId}`
@@ -219,21 +230,18 @@ export const addAEmployee = async (
   position: number,
   holidaysType: number,
   sector: number
-):Promise<boolean> => {
+): Promise<boolean> => {
   try {
-    const addEmployeeResponse = await axios.post(
-      `${API_URL}/employee`,
-      {
-        userid: email,
-        name: name,
-        document_type: documentType,
-        document_number: documentNumber,
-        current_hours_off: 0,
-        position_name: position,
-        holidays_typeId: holidaysType,
-        employee_Sector: sector,
-      }
-    );
+    const addEmployeeResponse = await axios.post(`${API_URL}/employee`, {
+      userid: email,
+      name: name,
+      document_type: documentType,
+      document_number: documentNumber,
+      current_hours_off: 0,
+      position_name: position,
+      holidays_typeId: holidaysType,
+      employee_Sector: sector,
+    });
     const wasAdded: boolean = addEmployeeResponse.data.ok;
 
     return wasAdded;
@@ -243,7 +251,40 @@ export const addAEmployee = async (
   }
 };
 
-export const updateLeaveRequest = async (
+export const updateAEmployee = async (
+  employeeId: number,
+  email: string,
+  name: string,
+  documentType: number,
+  documentNumber: string,
+  currentHoursOff: number,
+  positionName: number,
+  holidaysType: number,
+  sector: number
+): Promise<boolean> => {
+  try {
+    const updateEmployeeResponse = await axios.put(
+      `${API_URL}/employee/${employeeId}`,
+      {
+        userid: email,
+        name: name,
+        document_type: documentType,
+        document_number: documentNumber,
+        current_hours_off: currentHoursOff,
+        position_name: positionName,
+        holidays_typeId: holidaysType,
+        employee_Sector: sector,
+      }
+    );
+    const wasAdded: boolean = updateEmployeeResponse.data;
+    return wasAdded;
+  } catch (error) {
+    console.error("Error adding data:", error);
+    throw error;
+  }
+};
+
+export const updateALeaveRequest = async (
   id: number,
   startDate: string,
   endDate: String,
@@ -267,7 +308,7 @@ export const updateLeaveRequest = async (
   }
 };
 
-export const deleteLeaveRequest = async (
+export const deleteALeaveRequest = async (
   leaveRequestId: number
 ): Promise<boolean> => {
   try {
@@ -338,7 +379,7 @@ export const addAHolidaysType = async (
   country: string,
   amountOfDaysOff: number,
   nameOfTypeDaysOff: string
-) :Promise<Boolean> => {
+): Promise<Boolean> => {
   try {
     const addHolidaysTypeResponse = await axios.post(
       `${API_URL}//holidaysType`,
@@ -356,7 +397,7 @@ export const addAHolidaysType = async (
   }
 };
 
-export const updateHolidaysType = async (
+export const updateAHolidaysType = async (
   holidaysTypeId: number,
   holidaysTypeCountry: string,
   amountOfDaysOff: number,

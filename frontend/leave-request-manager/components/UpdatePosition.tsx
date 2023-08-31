@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import { updateAPosition } from "@/services/api";
 import React, { FormEventHandler, useState } from "react";
 
 interface UpdatePositionProps {
@@ -9,7 +9,12 @@ interface UpdatePositionProps {
   name: string;
 }
 
-export default function UpdatePosition({ onClose, onRefresh, positionId, name}: UpdatePositionProps) {
+export default function UpdatePosition({
+  onClose,
+  onRefresh,
+  positionId,
+  name,
+}: UpdatePositionProps) {
   const [position, setPosition] = useState(name);
   const [error, setError] = useState<boolean>(false);
 
@@ -19,22 +24,14 @@ export default function UpdatePosition({ onClose, onRefresh, positionId, name}: 
       return;
     }
 
-    try {
-      const updatedPositionResponse = await axios.put(
-        `http://localhost:3001/Position/${positionId}`,
-        { "name": position }
-      );
-      const wasUpdated: boolean = updatedPositionResponse.data;
-      
-      if (!wasUpdated) {
-        setError(true);
-      } else {
-        setError(false);
-        onClose();
-        onRefresh();
-      }
-    } catch (error) {
-      console.error("Error adding data:", error);
+    const wasUpdated = await updateAPosition(positionId, position);
+
+    if (!wasUpdated) {
+      setError(true);
+    } else {
+      setError(false);
+      onClose();
+      onRefresh();
     }
   };
 

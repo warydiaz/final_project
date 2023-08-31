@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Image from "next/image";
 import Pencil from "../app/icons/pencil.svg";
 import Trash from "../app/icons/trash.svg";
@@ -9,6 +8,12 @@ import UpdateSector from "./UpdateSector";
 import { Sector, Position } from "./types";
 import AddPosition from "./AddPosition";
 import UpdatePosition from "./UpdatePosition";
+import {
+  fetchSectors,
+  fetchPositions,
+  deleteASector,
+  deleteAPosition,
+} from "@/services/api";
 
 function Sector() {
   const [dataSections, setDataSections] = useState<Sector[]>([]);
@@ -50,33 +55,18 @@ function Sector() {
   };
 
   const getSections = async () => {
-    try {
-      const response = await axios.get<{ sector: Sector[] }>(
-        `http://localhost:3001/sector`
-      );
-      const jsonData: Sector[] = response.data.sector;
-      setDataSections(jsonData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    const jsonData = await fetchSectors();
+    setDataSections(jsonData);
   };
 
   const deleteSection = async (sectionId: number) => {
-    try {
-      const deleteResponse = await axios.delete(
-        `http://localhost:3001/sector/${sectionId}`
-      );
-      const wasDeleted: boolean = deleteResponse.data;
+    const wasDeleted = await deleteASector(sectionId);
 
-      if (!wasDeleted) {
-        setErrorSector(true);
-      } else {
-        setErrorSector(false);
-        fetchData();
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
+    if (!wasDeleted) {
       setErrorSector(true);
+    } else {
+      setErrorSector(false);
+      fetchData();
     }
   };
 
@@ -93,33 +83,18 @@ function Sector() {
   };
 
   const getPositions = async () => {
-    try {
-      const response = await axios.get<{ position: Position[] }>(
-        `http://localhost:3001/position`
-      );
-      const jsonData: Position[] = response.data.Position;
-      setDataPosition(jsonData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    const jsonData = await fetchPositions();
+    setDataPosition(jsonData);
   };
 
   const deletePosition = async (positionId: number) => {
-    try {
-      const deleteResponse = await axios.delete(
-        `http://localhost:3001/position/${positionId}`
-      );
-      const wasDeleted: boolean = deleteResponse.data;
+    const wasDeleted = await deleteAPosition(positionId);
 
-      if (!wasDeleted) {
-        setErrorPosition(true);
-      } else {
-        setErrorPosition(false);
-        fetchData();
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
+    if (!wasDeleted) {
       setErrorPosition(true);
+    } else {
+      setErrorPosition(false);
+      fetchData();
     }
   };
 

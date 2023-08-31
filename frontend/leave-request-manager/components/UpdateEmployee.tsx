@@ -1,11 +1,23 @@
 "use client";
-import axios from "axios";
 import React, { FormEventHandler, useState, useEffect } from "react";
 import DropDownSector from "./DropDownSector";
 import DropDownHolidaysType from "./DropDownHolidaysType";
 import DropDownDocumentType from "./DropDownDocumentType";
-import { HolidaysType, Sector, DocumentType, Employee, Position } from "./types";
+import {
+  HolidaysType,
+  Sector,
+  DocumentType,
+  Position,
+} from "./types";
 import DropDownPosition from "./DropDownPosition";
+import {
+  fetchSectors,
+  fetchHolidaysType,
+  fetchDocumetType,
+  fetchPositions,
+  fetchAEmployee,
+  updateAEmployee,
+} from "@/services/api";
 
 interface UpdateEmployeeProps {
   onClose: () => void;
@@ -41,72 +53,36 @@ export default function UpdateEmployee({
   }, []);
 
   const fetchDataSector = async () => {
-    try {
-      const response = await axios.get<{ sector: Sector[] }>(
-        `http://localhost:3001/sector`
-      );
-      const jsonData: Sector[] = response.data.sector;
-      setDataSector(jsonData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    const jsonData = await fetchSectors();
+    setDataSector(jsonData);
   };
 
   const fetchDataHolidaysType = async () => {
-    try {
-      const response = await axios.get<{ holidaysType: HolidaysType[] }>(
-        `http://localhost:3001/holidaysType`
-      );
-      const jsonData: HolidaysType[] = response.data.holidaysType;
-      setDataHolidaysType(jsonData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    const jsonData = await fetchHolidaysType();
+    setDataHolidaysType(jsonData);
   };
 
   const fetchDataDocumetType = async () => {
-    try {
-      const response = await axios.get<{ documentType: DocumentType[] }>(
-        `http://localhost:3001/documentType`
-      );
-      const jsonData: DocumentType[] = response.data.documentType;
-      setDataDocumentType(jsonData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    const jsonData = await fetchDocumetType();
+    setDataDocumentType(jsonData);
   };
 
   const fetchDataPositions = async () => {
-    try {
-      const response = await axios.get<{ sector: Position[] }>(
-        `http://localhost:3001/position`
-      );
-      const jsonData: Position[] = response.data.Position;
-      setDataPosition(jsonData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    const jsonData = await fetchPositions();
+    setDataPosition(jsonData);
   };
 
-
   const fetchDataEmployee = async () => {
-    try {
-      const response = await axios.get<{ employee: Employee }>(
-        `http://localhost:3001/employee/${employeeId}`
-      );
-      const jsonData: Employee = response.data;
+    const jsonData = await fetchAEmployee(employeeId);
 
-      setName(jsonData.name);
-      setSector(jsonData.employee_Sector);
-      setPositionName(jsonData.position_name)
-      setDocumentType(jsonData.document_type);
-      setDocumentNumber(jsonData.document_number);
-      setHolidaysType(jsonData.holidays_typeId);
-      setEmail(jsonData.userid);
-      setCurrentHoursOff(jsonData.current_hours_off);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    setName(jsonData.name);
+    setSector(jsonData.employee_Sector);
+    setPositionName(jsonData.position_name);
+    setDocumentType(jsonData.document_type);
+    setDocumentNumber(jsonData.document_number);
+    setHolidaysType(jsonData.holidays_typeId);
+    setEmail(jsonData.userid);
+    setCurrentHoursOff(jsonData.current_hours_off);
   };
 
   const selectSector = (sector: Sector) => {
@@ -136,31 +112,24 @@ export default function UpdateEmployee({
       return;
     }
 
-    try {
-      const updateEmployeeResponse = await axios.put(
-        `http://localhost:3001/employee/${employeeId}`,
-        {
-          userid: email,
-          name: name,
-          document_type: documentType,
-          document_number: documentNumber,
-          current_hours_off: currentHoursOff,
-          position_name: positionName,
-          holidays_typeId: holidaysType,
-          employee_Sector: sector,
-        }
-      );
-      const wasAdded: boolean = updateEmployeeResponse.data;
+    const wasAdded = await updateAEmployee(
+      employeeId,
+      email,
+      name,
+      documentType,
+      documentNumber,
+      currentHoursOff,
+      positionName,
+      holidaysType,
+      sector
+    );
 
-      if (!wasAdded) {
-        setError(true);
-      } else {
-        setError(false);
-        onClose();
-        onRefresh();
-      }
-    } catch (error) {
-      console.error("Error adding data:", error);
+    if (!wasAdded) {
+      setError(true);
+    } else {
+      setError(false);
+      onClose();
+      onRefresh();
     }
   };
 
@@ -192,12 +161,20 @@ export default function UpdateEmployee({
           </label>
           <label className="flex flex-col gap-2 mb-2">
             <span>Sector:</span>
-            <DropDownSector data={dataSector}  selectedId={sector} onSelect={selectSector} />
+            <DropDownSector
+              data={dataSector}
+              selectedId={sector}
+              onSelect={selectSector}
+            />
           </label>
 
           <label className="flex flex-col gap-2 mb-2">
             <span>Position:</span>
-            <DropDownPosition data={dataPosition} selectedId={positionName}onSelect={selectPosition} />
+            <DropDownPosition
+              data={dataPosition}
+              selectedId={positionName}
+              onSelect={selectPosition}
+            />
           </label>
 
           <label className="flex flex-col gap-2 mb-2">

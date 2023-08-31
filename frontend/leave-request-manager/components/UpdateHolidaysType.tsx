@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import { updateAHolidaysType } from "@/services/api";
 import React, { FormEventHandler, useState } from "react";
 
 interface UpdateHolidaysTypeProps {
@@ -39,26 +39,20 @@ export default function UpdateHolidaysType({
       setError(true);
       return;
     }
-    try {
-      const updatedHolidaysTypeResponse = await axios.put(
-        `http://localhost:3001/HolidaysType/${holidaysTypeId}`,
-        {
-          "country": holidaysTypeCountry,
-          "amount_of_days_off": amountOfDaysOff,
-          "name": nametOfDaysOff,
-        }
-      );
-      const wasUpdated: boolean = updatedHolidaysTypeResponse.data;
 
-      if (!wasUpdated) {
-        setError(true);
-      } else {
-        setError(false);
-        onClose();
-        onRefresh();
-      }
-    } catch (error) {
-      console.error("Error adding data:", error);
+    const wasUpdated = await updateAHolidaysType(
+      holidaysTypeId,
+      holidaysTypeCountry,
+      amountOfDaysOff,
+      nametOfDaysOff
+    );
+
+    if (!wasUpdated) {
+      setError(true);
+    } else {
+      setError(false);
+      onClose();
+      onRefresh();
     }
   };
 

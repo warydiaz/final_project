@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Image from "next/image";
 import Pencil from "../app/icons/pencil.svg";
 import Trash from "../app/icons/trash.svg";
 import AddEmployee from "./AddEmployee";
 import { Employee, Sector } from "./types";
 import UpdateEmployee from "./UpdateEmployee";
+import { fetchEmployees, fetchSectors, deleteAEmployee } from "@/services/api";
 //import Sector from "./Sector_position";
 
 function Employee() {
@@ -27,27 +27,13 @@ function Employee() {
   };
 
   const getEmployees = async () => {
-    try {
-      const response = await axios.get<{ employee: Employee[] }>(
-        `http://localhost:3001/employee`
-      );
-      const jsonData: Employee[] = response.data.employee;
-      setData(jsonData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    const jsonData = await fetchEmployees();
+    setData(jsonData);
   };
 
   const getSectors = async () => {
-    try {
-      const response = await axios.get<{ sector: Sector[] }>(
-        `http://localhost:3001/sector`
-      );
-      const jsonData: Sector[] = response.data.sector;
-      setSectorData(jsonData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    const jsonData = await fetchSectors();
+    setSectorData(jsonData);
   };
 
   const getNameSector = (id: number): string => {
@@ -61,22 +47,13 @@ function Employee() {
   };
 
   const deleteEmployee = async (employeeId: number) => {
-    try {
-      const deleteResponse = await axios.delete(
-        `http://localhost:3001/employee/${employeeId}`
-      );
+    const wasDeleted = await deleteAEmployee(employeeId);
 
-      const wasDeleted: boolean = deleteResponse.data;
-
-      if (!wasDeleted) {
-        setError(true);
-      } else {
-        setError(false);
-        fetchData();
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
+    if (!wasDeleted) {
       setError(true);
+    } else {
+      setError(false);
+      fetchData();
     }
   };
 
@@ -151,8 +128,8 @@ function Employee() {
                 <div className="m-4 cursor-pointer">
                   <Image src={Pencil} alt="Edit Icon" width={20} height={20} />
                 </div>
-                </td>
-                <td>
+              </td>
+              <td>
                 <div
                   className="m-4 cursor-pointer"
                   onClick={() => deleteEmployee(item.id)}

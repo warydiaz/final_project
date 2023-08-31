@@ -1,13 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Image from "next/image";
 import Pencil from "../app/icons/pencil.svg";
 import Trash from "../app/icons/trash.svg";
 import AddHolidaysType from "./AddHolidaysType";
 import UpdateHolidaysType from "./UpdateHolidaysType";
-import {HolidaysType} from "./types";
-
+import { HolidaysType } from "./types";
+import { fetchHolidaysType, deleteAHolidayType } from "@/services/api";
 
 function HolidaysType() {
   const [data, setData] = useState<HolidaysType[]>([]);
@@ -46,33 +45,17 @@ function HolidaysType() {
   }, []);
 
   const fetchData = async () => {
-    try {
-      const response = await axios.get<{ holidaysType: HolidaysType[] }>(
-        `http://localhost:3001/holidaysType`
-      );
-      const jsonData: HolidaysType[] = response.data.holidaysType;
-      setData(jsonData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    const jsonData = await fetchHolidaysType();
+    setData(jsonData);
   };
 
   const deleteHolidayType = async (holidayTypeId: number) => {
-    try {
-      const deleteResponse = await axios.delete(
-        `http://localhost:3001/holidaysType/${holidayTypeId}`
-      );
-      const wasDeleted: boolean = deleteResponse.data;
-
-      if (!wasDeleted) {
-        setError(true);
-      } else {
-        setError(false);
-        fetchData();
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
+    const wasDeleted = deleteAHolidayType(holidayTypeId);
+    if (!wasDeleted) {
       setError(true);
+    } else {
+      setError(false);
+      fetchData();
     }
   };
 

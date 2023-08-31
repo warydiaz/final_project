@@ -30,7 +30,10 @@ export default function SignOutButton() {
   return (
     <>
       <div className="mr-3">{user?.email}</div>
-      <button className="bg-stone-200 py-1 px-3 rounded" onClick={signOut}>
+      <button
+        className="bg-blue-500 text-white font-bold py-1 px-3 rounded"
+        onClick={signOut}
+      >
         Sign Out
       </button>
     </>

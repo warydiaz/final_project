@@ -294,12 +294,13 @@ export const updateALeaveRequest = async (
     const updateLeaveRequestResponse = await axios.put(
       `${API_URL}/leaveRequest/${id}`,
       {
-        startDate: startDate,
-        endtDate: endDate,
-        hours_off_requeted: hoursOffRequested,
+        start_date: startDate,
+        end_date: endDate,
+        hours_off_requested: hoursOffRequested,
       }
     );
-    const updated: boolean = updateLeaveRequestResponse.data.ok;
+
+    const updated: boolean = updateLeaveRequestResponse.data;
 
     return updated;
   } catch (error) {

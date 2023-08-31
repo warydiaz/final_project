@@ -74,7 +74,7 @@ export default function UpdateLeaveRequest({
 
         {error && (
           <div className="text-red-600 font-bold">
-            Error creating a Leave Request.
+            Error updating a Leave Request.
           </div>
         )}
 

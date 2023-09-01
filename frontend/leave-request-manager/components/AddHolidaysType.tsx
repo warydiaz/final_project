@@ -89,13 +89,13 @@ export default function AddHolidaysType({
           </label>
           <div className="flex justify-around">
             <button
-              className="bg-stone-200 py-1 px-3 rounded"
+              className="bg-blue-500 text-white py-1 px-3 rounded"
               onClick={onClose}
             >
               Close
             </button>
             <button
-              className="bg-stone-200 py-1 px-3 rounded"
+              className="bg-lime-600 text-white py-1 px-3 rounded"
               onClick={addHolidaysType}
             >
               Add

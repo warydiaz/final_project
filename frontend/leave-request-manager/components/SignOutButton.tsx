@@ -13,14 +13,14 @@ export default function SignOutButton() {
 
   const [user, setUser] = useState<User | null>(null);
 
-  const getUser = async () => {
-    const { data, error } = await supabase.auth.getUser();
-    return data.user;
-  };
-
   useEffect(() => {
+    const getUser = async () => {
+      const { data, error } = await supabase.auth.getUser();
+      return data.user;
+    };
+
     getUser().then(setUser);
-  }, []);
+  }, [supabase.auth]);
 
   const signOut = async () => {
     await supabase.auth.signOut();

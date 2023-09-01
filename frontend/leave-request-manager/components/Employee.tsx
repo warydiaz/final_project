@@ -78,7 +78,7 @@ function Employee() {
       <h1 className="text-2xl font-bold m-4">List of Employees</h1>
 
       <button
-        className="bg-stone-200 py-1 px-3 rounded w-52"
+        className="bg-lime-600 text-white py-1 px-3 rounded w-52"
         onClick={() => {
           openPopupAddEmployee();
         }}

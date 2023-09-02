@@ -48,7 +48,7 @@ export default function Page() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </label>
-        <button className="bg-stone-200 py-1 px-3 rounded" onClick={singIn}>
+        <button className="bg-blue-500 text-white py-1 px-3 rounded" onClick={singIn}>
           Sign-in
         </button>
       </form>

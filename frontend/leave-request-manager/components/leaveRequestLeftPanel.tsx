@@ -12,7 +12,7 @@ export default function LeaveRequestLeftPanel() {
           height={25}
           className=" m-4 "
         />
-        <label className="gap-2 mb-2 cursor-pointer font-bold">Leave Request</label>
+        <label className="ml-2 cursor-pointer font-bold">Leave Request</label>
       </div>
     </Link>
   );

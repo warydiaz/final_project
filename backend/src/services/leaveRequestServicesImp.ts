@@ -43,7 +43,7 @@ export class LeaveRequestServicesImp implements LeaveRequestServices {
     }
   };
 
-  public  getLeaveRequestUserId = async (userId: Number): Promise<LeaveRequest | null> => {
+  public  getLeaveRequestUserId = async (userId: Number): Promise<LeaveRequest []| null> => {
     try {
       const { data, error }: PostgrestResponse<LeaveRequest> = await supabase
         .from("Leave_request")
@@ -54,7 +54,7 @@ export class LeaveRequestServicesImp implements LeaveRequestServices {
         console.error(`Error trying to get data from LeaveRequest":`, error);
         return null;
       } else {
-        return data.length ? data[0] : null;
+        return data.length ? data : null;
       }
     } catch (error) {
       console.error(`Error trying to get data from LeaveRequest":`, error);

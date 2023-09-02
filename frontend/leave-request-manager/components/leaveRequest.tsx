@@ -33,10 +33,11 @@ function LeaveRequest() {
 
   const getUser = async () => {
     const { data, error } = await supabase.auth.getUser();
+    setUser(user);
     return data.user;
   };
 
-  const getId = async (userId: string) => {
+  const getId = async (userId: string): Promise<number | undefined> => {
     const exist = await fetchAEmployeeByUserId(userId);
 
     if (!exist) {
@@ -44,11 +45,16 @@ function LeaveRequest() {
     } else {
       setError(false);
       setId(exist.id);
+      return exist.id;
     }
   };
 
   const fetchData = async () => {
-    const jsonData = await fetchLeaveRequest();
+    const userFetcData = await getUser();
+    
+    const useridFetcData = await getId(userFetcData.email);
+ 
+    const jsonData = await fetchLeaveRequest(useridFetcData);
 
     const jsonDataProceced = jsonData.map((item) => ({
       id: item.id,
@@ -60,9 +66,6 @@ function LeaveRequest() {
     }));
 
     setData(jsonDataProceced);
-    const user = await getUser();
-    setUser(user);
-    await getId(user!.email);
   };
 
   const openPopupAddLeaveRequest = () => {

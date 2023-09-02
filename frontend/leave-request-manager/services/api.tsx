@@ -324,12 +324,15 @@ export const deleteALeaveRequest = async (
   }
 };
 
-export const fetchLeaveRequest = async (): Promise<LeaveRequest[]> => {
+export const fetchLeaveRequest = async (userId: number): Promise<LeaveRequest[]> => {
   try {
-    const response = await axios.get<{ leaveRequest: LeaveRequest[] }>(
-      `${API_URL}/leaveRequest`
+    const fetchLeaveRequestResponse = await axios.post(
+      `${API_URL}/leaveRequest/userid`,
+      {
+        userid: userId,
+      }
     );
-    const jsonData: LeaveRequest[] = response.data.leaveRequest;
+    const jsonData: LeaveRequest[] = fetchLeaveRequestResponse.data;
     return jsonData;
   } catch (error) {
     console.error("Error fetching data:", error);

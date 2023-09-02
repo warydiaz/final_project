@@ -34,6 +34,13 @@ router.post(
   })
 );
 
+
+router.use("userid/:userid", async (req: Request, res, next) => {
+  const userid = req.body;
+  req.userid = userid.userid;
+  next();
+});
+
 export interface RequestWithLeaveRequestId extends Request {
   params: { id: any };
   body: any;
@@ -49,10 +56,21 @@ router.use("/:id", async (req: RequestWithLeaveRequestId, res, next) => {
 router.get(
   "/:id",
   errorChecked(async (req: RequestWithLeaveRequestId, res) => {
-    const employee = await leaveRequestServicesQuery.getALeaveRequest(
+    const leaveRequest = await leaveRequestServicesQuery.getALeaveRequest(
       req.leaveRequestId
     );
-    res.status(200).json(employee);
+    res.status(200).json(leaveRequest);
+  })
+);
+
+router.post(
+  "/:userid",
+  errorChecked(async (req: Request, res) => {
+    console.log("hola");
+    const leaveRequest = await leaveRequestServicesQuery.getLeaveRequestUserId(
+      req.body.userid
+    );
+    res.status(200).json(leaveRequest);
   })
 );
 

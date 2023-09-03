@@ -110,7 +110,7 @@ function Sector() {
             refreshData();
           }}
         >
-          Add a Sector
+          Add Sector
         </button>
 
         {showPopupAddSector && (
@@ -168,9 +168,8 @@ function Sector() {
           onClick={() => {
             openPopupAddPosition();
             refreshData();
-          }}
-        >
-          Add a Position
+          }}>
+          Add Position
         </button>
 
         {showPopupAddPosition && (

@@ -340,6 +340,22 @@ export const fetchLeaveRequest = async (userId: number): Promise<LeaveRequest[]>
   }
 };
 
+export const fetchLeaveRequestByManager = async (userId: number): Promise<any[]> => {
+  try {
+    const fetchLeaveRequestResponse = await axios.post(
+      `${API_URL}/leaveRequest/managerid`,
+      {
+        managerid: userId,
+      }
+    );
+    const jsonData: LeaveRequest[] = fetchLeaveRequestResponse.data;
+    return jsonData;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+};
+
 export const fetchALeaveRequest = async (id: number): Promise<LeaveRequest> => {
   try {
     const leaveRequestResponse = await axios.get(

@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import LeftPanel from "@/components/LeftPanel";
-import LeaveRequest from "@/components/leaveRequest";
+import MyTeamLeaveRequest from "@/components/MyTeamLeaveRequest";
 export const metadata = {
   title: "Leave Request",
   description: "Vistagaming Leave Request Manager",
@@ -17,7 +17,7 @@ export default function RootLayout({
       <Header />
       <div className="flex h-screen">
         <LeftPanel  />
-        <LeaveRequest />
+        <MyTeamLeaveRequest />
       </div>
       {children}
     </>

@@ -34,13 +34,6 @@ router.post(
   })
 );
 
-
-router.use("userid/:userid", async (req: Request, res, next) => {
-  const userid = req.body;
-  req.userid = userid.userid;
-  next();
-});
-
 export interface RequestWithLeaveRequestId extends Request {
   params: { id: any };
   body: any;
@@ -64,9 +57,18 @@ router.get(
 );
 
 router.post(
-  "/:userid",
-  errorChecked(async (req: Request, res) => {
-    console.log("hola");
+  "/managerid",
+  errorChecked(async (req, res) => {
+    const leaveRequest = await leaveRequestServicesQuery.getLeaveRequestByTeam(
+      req.body.managerid
+    );
+    res.status(200).json(leaveRequest);
+  })
+);
+
+router.post(
+  "/userid",
+  errorChecked(async (req, res) => {
     const leaveRequest = await leaveRequestServicesQuery.getLeaveRequestUserId(
       req.body.userid
     );

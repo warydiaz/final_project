@@ -1,4 +1,5 @@
 import EmployeeLeftPanel from "./EmployeeLeftPanel";
+import MyTeamLeaveRequestLeftPanel from "./MyTeamleaveRequestLeftPanel";
 import SectorLeftPanel from "./Sector_positionLeftPanel";
 import HolidaysTypeLeftPanel from "./holidaysTypeLeftPanel";
 import LeaveRequestLeftPanel from "./leaveRequestLeftPanel"
@@ -10,6 +11,7 @@ export default function LeftPanel() {
       <EmployeeLeftPanel />
       <HolidaysTypeLeftPanel />
       <LeaveRequestLeftPanel/>
+      <MyTeamLeaveRequestLeftPanel/>
     </div>
   );
 }

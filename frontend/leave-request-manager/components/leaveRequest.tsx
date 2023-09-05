@@ -93,7 +93,7 @@ function LeaveRequest() {
 
   return (
     <div className="flex flex-col ml-8 mr-8 w-10/12 ">
-      <h1 className="text-2xl font-bold m-4">List of Leave Request</h1>
+      <h1 className="text-2xl font-bold m-4">My List of Leave Request</h1>
 
       <button
         className="bg-lime-600 text-white py-1 px-3 rounded w-52"

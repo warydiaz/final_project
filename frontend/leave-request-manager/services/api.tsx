@@ -288,7 +288,8 @@ export const updateALeaveRequest = async (
   id: number,
   startDate: string,
   endDate: String,
-  hoursOffRequested: number
+  hoursOffRequested: number,
+  status?:string
 ): Promise<boolean> => {
   try {
     const updateLeaveRequestResponse = await axios.put(
@@ -297,6 +298,7 @@ export const updateALeaveRequest = async (
         start_date: startDate,
         end_date: endDate,
         hours_off_requested: hoursOffRequested,
+        status:status
       }
     );
 
@@ -340,12 +342,13 @@ export const fetchLeaveRequest = async (userId: number): Promise<LeaveRequest[]>
   }
 };
 
-export const fetchLeaveRequestByManager = async (userId: number): Promise<any[]> => {
+export const fetchLeaveRequestByManager = async (userId: number, status:string[]): Promise<any[]> => {
   try {
     const fetchLeaveRequestResponse = await axios.post(
       `${API_URL}/leaveRequest/managerid`,
       {
         managerid: userId,
+        status:status
       }
     );
     const jsonData: LeaveRequest[] = fetchLeaveRequestResponse.data;

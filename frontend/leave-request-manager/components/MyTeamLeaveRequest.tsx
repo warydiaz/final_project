@@ -5,7 +5,7 @@ import Pencil from "../app/icons/pencil.svg";
 import UpdateLeaveRequest from "./UpdateLeaveRequest";
 import {
   fetchAEmployeeByUserId,
-  fetchLeaveRequestByManager
+  fetchLeaveRequestByManager,
 } from "@/services/api";
 import {
   User,
@@ -15,7 +15,8 @@ import {
 function MyTeamLeaveRequest() {
   const [data, setData] = useState<any[]>([]);
   const [error, setError] = useState<boolean>(false);
-  const [showPopupUpdateLeaveRequest, setshowPopupUpdateLeaveRequest] = useState(false);
+  const [showPopupUpdateLeaveRequest, setshowPopupUpdateLeaveRequest] =
+    useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [id, setId] = useState(0);
   const [leaveRequestId, setLeaveRequestId] = useState(0);
@@ -48,19 +49,23 @@ function MyTeamLeaveRequest() {
 
     const useridFetcData = await getId(userFetcData.email);
 
-    const jsonData = await fetchLeaveRequestByManager(useridFetcData);
+    const jsonData = await fetchLeaveRequestByManager(useridFetcData, [
+      "Requested",
+    ]);
 
-    const jsonDataProceced = jsonData.map((item) => ({
-      id: item.id,
-      employeeId: item.employeeId,
-      name:item.name,
-      start_date: new Date(item.start_date).toLocaleDateString(),
-      end_date: new Date(item.end_date).toLocaleDateString(),
-      hours_off_requested: item.hours_off_requested,
-      status: item.status,
-    }));
+    if (jsonData) {
+      const jsonDataProceced = jsonData.map((item) => ({
+        id: item.id,
+        employeeId: item.employeeId,
+        name: item.name,
+        start_date: new Date(item.start_date).toLocaleDateString(),
+        end_date: new Date(item.end_date).toLocaleDateString(),
+        hours_off_requested: item.hours_off_requested,
+        status: item.status,
+      }));
 
-    setData(jsonDataProceced);
+      setData(jsonDataProceced);
+    }
   };
 
   const closePopupUpdateLeaveRequest = () => {
@@ -69,13 +74,16 @@ function MyTeamLeaveRequest() {
 
   return (
     <div className="flex flex-col ml-8 mr-8 w-10/12 ">
-      <h1 className="text-2xl font-bold m-4">List of Leave Request</h1>
+      <h1 className="text-2xl font-bold m-4">
+        List of Leave Request of My Team
+      </h1>
 
       {showPopupUpdateLeaveRequest && (
         <UpdateLeaveRequest
           onClose={closePopupUpdateLeaveRequest}
           onRefresh={fetchData}
           id={leaveRequestId}
+          isToApprove={true}
         />
       )}
 

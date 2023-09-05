@@ -1,21 +1,25 @@
 "use client";
 import React, { FormEventHandler, useState, useEffect } from "react";
 import { fetchALeaveRequest, updateALeaveRequest } from "@/services/api";
+import DropDownLeaveRequestStatus from "./DropDownLeaveRequestStatus";
 
-interface AddLeaveRequestProps {
+interface updateLeaveRequestProps {
   onClose: () => void;
   onRefresh: () => void;
   id: number;
+  isToApprove?: boolean;
 }
 
 export default function UpdateLeaveRequest({
   onClose,
   onRefresh,
   id,
-}: AddLeaveRequestProps) {
+  isToApprove,
+}: updateLeaveRequestProps) {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [hoursOffRequested, setHoursOffRequested] = useState(0);
+  const [status, setStatus] = useState("");
   const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
@@ -34,6 +38,7 @@ export default function UpdateLeaveRequest({
       setStartDate(start);
       setEndDate(end);
       setHoursOffRequested(leaveRequest.hours_off_requested);
+      setStatus(leaveRequest.status);
     }
   };
 
@@ -51,7 +56,8 @@ export default function UpdateLeaveRequest({
       id,
       startDate,
       endDate,
-      hoursOffRequested
+      hoursOffRequested,
+      status
     );
 
     if (!updated) {
@@ -112,6 +118,15 @@ export default function UpdateLeaveRequest({
             />
           </label>
 
+          {isToApprove && (
+            <label className="flex flex-col gap-2 mb-2">
+              <span>Status:</span>
+              <DropDownLeaveRequestStatus
+                leaveRequestStatusOld={status}
+                onSelect={setStatus}
+              />
+            </label>
+          )}
           <div className="flex justify-around">
             <button
               className="bg-stone-200 py-1 px-3 rounded"

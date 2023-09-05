@@ -60,7 +60,7 @@ router.post(
   "/managerid",
   errorChecked(async (req, res) => {
     const leaveRequest = await leaveRequestServicesQuery.getLeaveRequestByTeam(
-      req.body.managerid
+      req.body.managerid, req.body.status
     );
     res.status(200).json(leaveRequest);
   })

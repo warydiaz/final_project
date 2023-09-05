@@ -2,7 +2,7 @@ import Header from "@/components/Header";
 import LeftPanel from "@/components/LeftPanel";
 import MyTeamLeaveRequest from "@/components/MyTeamLeaveRequest";
 export const metadata = {
-  title: "Leave Request",
+  title: "My Team Leave Request",
   description: "Vistagaming Leave Request Manager",
 };
 

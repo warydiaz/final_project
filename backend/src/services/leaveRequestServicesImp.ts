@@ -68,7 +68,8 @@ export class LeaveRequestServicesImp implements LeaveRequestServices {
   };
 
   public getLeaveRequestByTeam = async (
-    userIdManager: Number
+    userIdManager: number,
+    status:string[]
   ): Promise<any[] | null> => {
     try {
    
@@ -85,9 +86,10 @@ export class LeaveRequestServicesImp implements LeaveRequestServices {
         const employeeSector = employeeSectorResult.data.employee_Sector;
 
         const employeeIdsResult = await supabase
-          .from("Employee")
-          .select("id")
-          .eq("employee_Sector", employeeSector);
+        .from("Employee")
+        .select("id")
+        .eq("employee_Sector", employeeSector)
+        .neq("id", userIdManager);
 
         if (employeeIdsResult.error) {
           console.error(`Error trying to get data from LeaveRequest":`, employeeIdsResult.error);
@@ -100,7 +102,8 @@ export class LeaveRequestServicesImp implements LeaveRequestServices {
           const { data, error } = await supabase
             .from("Leave_request")
             .select("*")
-            .in("employeeId", employeeIds);
+            .in("employeeId", employeeIds)
+            .in("status",status);
 
             const leaveRequestWithNameEmployee = data.map((item)=>{
               const employeeName = employeeNames.find((employee)=>{

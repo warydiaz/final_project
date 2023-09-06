@@ -28,7 +28,7 @@ function MyTeamLeaveRequest() {
 
   const getUser = async () => {
     const { data, error } = await supabase.auth.getUser();
-    setUser(user);
+    setUser(data.user);
     return data.user;
   };
 
@@ -44,14 +44,15 @@ function MyTeamLeaveRequest() {
     }
   };
 
-  const fetchData = async () => {
+  const fetchData = async (status?: string[]) => {
     const userFetcData = await getUser();
-
     const useridFetcData = await getId(userFetcData.email);
 
-    const jsonData = await fetchLeaveRequestByManager(useridFetcData, [
-      "Requested",
-    ]);
+    if (!status) {
+      status = ["Requested"];
+    }
+
+    const jsonData = await fetchLeaveRequestByManager(useridFetcData, [status]);
 
     if (jsonData) {
       const jsonDataProceced = jsonData.map((item) => ({
@@ -65,6 +66,8 @@ function MyTeamLeaveRequest() {
       }));
 
       setData(jsonDataProceced);
+    } else {
+      setData([]);
     }
   };
 
@@ -77,6 +80,25 @@ function MyTeamLeaveRequest() {
       <h1 className="text-2xl font-bold m-4">
         List of Leave Request of My Team
       </h1>
+
+      <div className="flex">
+        <div
+          className="flex-1 items-center justify-start border p-4 rounded text-center m-4 hover:shadow-md cursor-pointer"
+          onClick={() => fetchData()}
+        >
+          <label className="ml-2 font-bold">Requested</label>
+        </div>
+        <div
+          className="flex-1 items-center justify-start border p-4 rounded text-center m-4 hover:shadow-md cursor-pointer"
+          onClick={() => fetchData(["Approved", "Rejected"])}
+        >
+          <label className="ml-2 font-bold">History</label>
+        </div>
+      </div>
+
+      {error && (
+        <div className="text-red-600 font-bold">Error trying to get data.</div>
+      )}
 
       {showPopupUpdateLeaveRequest && (
         <UpdateLeaveRequest

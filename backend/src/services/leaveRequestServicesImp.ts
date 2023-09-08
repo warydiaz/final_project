@@ -3,6 +3,13 @@ import { LeaveRequest } from "../models/leaveRequest.js";
 import supabase from "../db/supabase-client.js";
 import { PostgrestResponse } from "@supabase/supabase-js";
 import { Employee } from "../models/employee.js";
+import MailServices from "../mail/mailsServices.js";
+import { MailServicesImp } from "../mail/mailsServicesImp.js";
+import Sector from "../models/sector.js";
+import { EmployeeServices } from "./employeeServices.js";
+import { EmployeeServicesImp } from "./employeeServicesImp.js";
+import SectorServices from "./sectorServices.js";
+import { SectorServicesImp } from "./sectorServicesImp.js";
 
 export class LeaveRequestServicesImp implements LeaveRequestServices {
   constructor() {}
@@ -69,59 +76,69 @@ export class LeaveRequestServicesImp implements LeaveRequestServices {
 
   public getLeaveRequestByTeam = async (
     userIdManager: number,
-    status:string[]
+    status: string[]
   ): Promise<any[] | null> => {
     try {
-   
       const employeeSectorResult = await supabase
         .from("Employee")
         .select("employee_Sector")
         .eq("id", userIdManager)
-        .single(); 
+        .single();
 
       if (employeeSectorResult.error) {
-        console.error(`Error trying to get data from LeaveRequest":`, employeeSectorResult.error);
+        console.error(
+          `Error trying to get data from LeaveRequest":`,
+          employeeSectorResult.error
+        );
         return null;
       } else {
         const employeeSector = employeeSectorResult.data.employee_Sector;
 
         const employeeIdsResult = await supabase
-        .from("Employee")
-        .select("id")
-        .eq("employee_Sector", employeeSector)
-        .neq("id", userIdManager);
+          .from("Employee")
+          .select("id")
+          .eq("employee_Sector", employeeSector)
+          .neq("id", userIdManager);
 
         if (employeeIdsResult.error) {
-          console.error(`Error trying to get data from LeaveRequest":`, employeeIdsResult.error);
+          console.error(
+            `Error trying to get data from LeaveRequest":`,
+            employeeIdsResult.error
+          );
           return null;
         } else {
           const employeeIds = employeeIdsResult.data.map((item) => item.id);
 
           const employeeNames = await this.getANamesEmployees(employeeIds);
-          
+
           const { data, error } = await supabase
             .from("Leave_request")
             .select("*")
             .in("employeeId", employeeIds)
-            .in("status",status);
+            .in("status", status);
 
-            const leaveRequestWithNameEmployee = data.map((item)=>{
-              const employeeName = employeeNames.find((employee)=>{
-                if (employee.id == item.employeeId) {
-                  return employee;
-                }
-              })
-
-              item["name"] = employeeName.name;
-
-              return item;
+          const leaveRequestWithNameEmployee = data.map((item) => {
+            const employeeName = employeeNames.find((employee) => {
+              if (employee.id == item.employeeId) {
+                return employee;
+              }
             });
 
+            item["name"] = employeeName.name;
+
+            return item;
+          });
+
           if (error) {
-            console.error(`Error trying to get data from LeaveRequest":`, error);
+            console.error(
+              `Error trying to get data from LeaveRequest":`,
+              error
+            );
             return null;
           } else {
-            return leaveRequestWithNameEmployee.length ? leaveRequestWithNameEmployee : null;
+            return leaveRequestWithNameEmployee.length
+              ? leaveRequestWithNameEmployee
+              : null;
           }
         }
       }
@@ -131,7 +148,9 @@ export class LeaveRequestServicesImp implements LeaveRequestServices {
     }
   };
 
-  private getANamesEmployees = async (ids: number[]): Promise<Employee[] | null> => {
+  private getANamesEmployees = async (
+    ids: number[]
+  ): Promise<Employee[] | null> => {
     try {
       const { data, error }: PostgrestResponse<Employee> = await supabase
         .from("Employee")
@@ -205,10 +224,51 @@ export class LeaveRequestServicesImp implements LeaveRequestServices {
         return null;
       } else {
         console.log(`LeaveRequest inserted successfully.`);
+        this.sendEmailWhenALeaveRequestIsCreayed(leaveRequest);
         return data.length ? data[0] : null;
       }
     } catch (error) {
       console.error(`Error inserting LeaveRequest:`, error);
+      return null;
+    }
+  };
+
+  private sendEmailWhenALeaveRequestIsCreayed = async (
+    leaveRequest: LeaveRequest
+  ) => {
+    try {
+        const employeeServices:EmployeeServices = new EmployeeServicesImp();
+        const employee: Employee = await employeeServices.getAEmployee(leaveRequest.employeeId);
+        const sectorServices:SectorServices = new SectorServicesImp();
+        const sector: Sector = await sectorServices.getASector(employee.employee_Sector)
+        const to = await this.getManagers(sector);
+        
+        const mail: MailServices = new MailServicesImp();
+        mail.sendEmail({
+          to: to,
+          subject: `Leave Request for ${employee.name}`,
+          text: `Hi, \n${employee.name}, has requested a leave from ${leaveRequest.startDate} to ${leaveRequest.endtDate}.\nTotaling ${leaveRequest.hours_off_requeted} ours requested. \nBest regards,`,
+        });
+      
+    } catch (error) {
+      console.error(`Error getting employee:`, error);
+      return null;
+    }
+  };
+
+  private getManagers = async (sector: Sector):Promise<string> => {
+    try {
+      const employeeServices:EmployeeServices = new EmployeeServicesImp();
+      const employee: Employee[] = await employeeServices.getManagers(sector);
+
+      const to:string = employee.reduce((to:string, aEmployee:Employee) => {
+        return to + `, ${aEmployee.userId}`;
+      },"");
+
+      return to;
+      
+    } catch (error) {
+      console.error(`Error getting Managers:`, error);
       return null;
     }
   };

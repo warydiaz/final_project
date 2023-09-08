@@ -2,6 +2,7 @@ import { EmployeeServices } from "./employeeServices.js";
 import { Employee } from "../models/employee.js";
 import supabase from "../db/supabase-client.js";
 import { PostgrestResponse } from "@supabase/supabase-js";
+import { Sector } from "@prisma/client";
 
 export class EmployeeServicesImp implements EmployeeServices {
   constructor() {}
@@ -43,7 +44,9 @@ export class EmployeeServicesImp implements EmployeeServices {
     }
   };
 
-  public getAEmployeeByUserId = async (userId: string): Promise<Employee | null> => {
+  public getAEmployeeByUserId = async (
+    userId: string
+  ): Promise<Employee | null> => {
     try {
       const { data, error }: PostgrestResponse<Employee> = await supabase
         .from("Employee")
@@ -119,6 +122,27 @@ export class EmployeeServicesImp implements EmployeeServices {
       }
     } catch (error) {
       console.error(`Error inserting Employee:`, error);
+      return null;
+    }
+  };
+
+  public getManagers = async (sector: Sector): Promise<Employee[]> => {
+    try {
+      const MANAGER: number = 2;
+      const { data, error }: PostgrestResponse<Employee> = await supabase
+        .from("Employee")
+        .select("*")
+        .eq("employee_Sector", sector.id)
+        .eq("position_name", MANAGER);
+
+      if (error) {
+        console.error(`Error trying to delete Employee:`, error);
+        return null;
+      } else {
+        return data;
+      }
+    } catch (error) {
+      console.error(`Error trying to delete Employee:`, error);
       return null;
     }
   };

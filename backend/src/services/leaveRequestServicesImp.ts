@@ -12,7 +12,15 @@ import SectorServices from "./sectorServices.js";
 import { SectorServicesImp } from "./sectorServicesImp.js";
 
 export class LeaveRequestServicesImp implements LeaveRequestServices {
-  constructor() {}
+  private employeeServices: EmployeeServices;
+  private mail: MailServices;
+  private sectorServices: SectorServices;
+
+  constructor() {
+    this.employeeServices = new EmployeeServicesImp();
+    this.mail = new MailServicesImp();
+    this.sectorServices = new SectorServicesImp();
+  }
 
   public getAllLeaveRequest = async (): Promise<LeaveRequest[]> => {
     try {
@@ -108,8 +116,8 @@ export class LeaveRequestServicesImp implements LeaveRequestServices {
           return null;
         } else {
           const employeeIds = employeeIdsResult.data.map((item) => item.id);
-
-          const employeeNames = await this.getANamesEmployees(employeeIds);
+          const employeeNames: Employee[] =
+            await this.employeeServices.getEmployees(employeeIds);
 
           const { data, error } = await supabase
             .from("Leave_request")
@@ -148,27 +156,6 @@ export class LeaveRequestServicesImp implements LeaveRequestServices {
     }
   };
 
-  private getANamesEmployees = async (
-    ids: number[]
-  ): Promise<Employee[] | null> => {
-    try {
-      const { data, error }: PostgrestResponse<Employee> = await supabase
-        .from("Employee")
-        .select("*")
-        .in("id", ids);
-
-      if (error) {
-        console.error(`Error trying to get data from Employee":`, error);
-        return null;
-      } else {
-        return data.length ? data : null;
-      }
-    } catch (error) {
-      console.error(`Error trying to get data from Employee":`, error);
-      return null;
-    }
-  };
-
   public deleteALeaveRequest = async (id: number): Promise<boolean> => {
     try {
       const { data, error }: PostgrestResponse<unknown> = await supabase
@@ -202,6 +189,12 @@ export class LeaveRequestServicesImp implements LeaveRequestServices {
         console.error(`Error trying to update LeaveRequest:`, error);
         return false;
       } else {
+        const updatedLeaveRequest: LeaveRequest = await this.getALeaveRequest(
+          id
+        );
+        if (updatedLeaveRequest.status != "Requested") {
+          this.sendEmailWhenALeaveRequestIsUpdated(updatedLeaveRequest);
+        }
         return true;
       }
     } catch (error) {
@@ -224,7 +217,7 @@ export class LeaveRequestServicesImp implements LeaveRequestServices {
         return null;
       } else {
         console.log(`LeaveRequest inserted successfully.`);
-        this.sendEmailWhenALeaveRequestIsCreayed(leaveRequest);
+        this.sendEmailWhenALeaveRequestIsCreated(leaveRequest);
         return data.length ? data[0] : null;
       }
     } catch (error) {
@@ -233,40 +226,61 @@ export class LeaveRequestServicesImp implements LeaveRequestServices {
     }
   };
 
-  private sendEmailWhenALeaveRequestIsCreayed = async (
+  private sendEmailWhenALeaveRequestIsCreated = async (
     leaveRequest: LeaveRequest
   ) => {
     try {
-        const employeeServices:EmployeeServices = new EmployeeServicesImp();
-        const employee: Employee = await employeeServices.getAEmployee(leaveRequest.employeeId);
-        const sectorServices:SectorServices = new SectorServicesImp();
-        const sector: Sector = await sectorServices.getASector(employee.employee_Sector)
-        const to = await this.getManagers(sector);
-        
-        const mail: MailServices = new MailServicesImp();
-        mail.sendEmail({
-          to: to,
-          subject: `Leave Request for ${employee.name}`,
-          text: `Hi, \n${employee.name}, has requested a leave from ${leaveRequest.startDate} to ${leaveRequest.endtDate}.\nTotaling ${leaveRequest.hours_off_requeted} ours requested. \nBest regards,`,
-        });
-      
+      const employee: Employee = await this.employeeServices.getAEmployee(
+        leaveRequest.employeeId
+      );
+
+      const sector: Sector = await this.sectorServices.getASector(
+        employee.employee_Sector
+      );
+      const to = await this.getManagers(sector);
+
+      this.mail.sendEmail({
+        to: to,
+        subject: `Leave Request for ${employee.name}`,
+        text: `Hi, \n${employee.name}, has requested a leave from ${leaveRequest.startDate} to ${leaveRequest.endtDate}.\nTotaling ${leaveRequest.hours_off_requeted} ours requested. \nBest regards,`,
+      });
     } catch (error) {
       console.error(`Error getting employee:`, error);
       return null;
     }
   };
 
-  private getManagers = async (sector: Sector):Promise<string> => {
+  private sendEmailWhenALeaveRequestIsUpdated = async (
+    leaveRequest: LeaveRequest
+  ) => {
     try {
-      const employeeServices:EmployeeServices = new EmployeeServicesImp();
-      const employee: Employee[] = await employeeServices.getManagers(sector);
+      const employee: Employee = await this.employeeServices.getAEmployee(
+        leaveRequest.employeeId
+      );
 
-      const to:string = employee.reduce((to:string, aEmployee:Employee) => {
+      this.mail.sendEmail({
+        to: employee.userId,
+        subject: `Leave Request ${leaveRequest.status}`,
+        text: `Hi, \n${employee.name}, your leave request from ${leaveRequest.startDate} to ${leaveRequest.endtDate}.\nTotaling ${leaveRequest.hours_off_requeted} ours requested. Has benn ${leaveRequest.status}  \nBest regards,`,
+      });
+    } catch (error) {
+      console.error(`Error getting employee:`, error);
+      return null;
+    }
+  };
+
+  private getManagers = async (sector: Sector): Promise<string> => {
+    try {
+      // const employeeServices: EmployeeServices = new EmployeeServicesImp();
+      const employee: Employee[] = await this.employeeServices.getManagers(
+        sector
+      );
+
+      const to: string = employee.reduce((to: string, aEmployee: Employee) => {
         return to + `, ${aEmployee.userId}`;
-      },"");
+      }, "");
 
       return to;
-      
     } catch (error) {
       console.error(`Error getting Managers:`, error);
       return null;

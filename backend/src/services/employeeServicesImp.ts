@@ -25,6 +25,27 @@ export class EmployeeServicesImp implements EmployeeServices {
     }
   };
 
+  public getEmployees = async (
+    ids: number[]
+  ): Promise<Employee[] | null> => {
+    try {
+      const { data, error }: PostgrestResponse<Employee> = await supabase
+        .from("Employee")
+        .select("*")
+        .in("id", ids);
+
+      if (error) {
+        console.error(`Error trying to get data from Employee":`, error);
+        return null;
+      } else {
+        return data.length ? data : null;
+      }
+    } catch (error) {
+      console.error(`Error trying to get data from Employee":`, error);
+      return null;
+    }
+  };
+
   public getAEmployee = async (id: Number): Promise<Employee | null> => {
     try {
       const { data, error }: PostgrestResponse<Employee> = await supabase

@@ -1,6 +1,6 @@
 export class Employee {
   public id: number | undefined;
-  public userId: string;
+  public userid: string;
   public name: string;
   public document_type: number;
   public document_number: string;
@@ -10,7 +10,7 @@ export class Employee {
   public holidays_type: Number;
 
   constructor(
-    userId: string,
+    userid: string,
     name: string,
     document_type: number,
     document_number: string,
@@ -20,7 +20,7 @@ export class Employee {
     holidays_type: Number
   ) {
     this.id = undefined;
-    this.userId = userId;
+    this.userid = userid;
     this.name = name;
     this.document_type = document_type;
     this.document_number = document_number;
@@ -36,7 +36,7 @@ export class Employee {
 
   public getObjEmployee(): any{
     const anEmployee = {
-      "userid": this.userId,
+      "userid": this.userid,
       "name": this.name,
       "document_type": this.document_type,
       "document_number": this.document_number,

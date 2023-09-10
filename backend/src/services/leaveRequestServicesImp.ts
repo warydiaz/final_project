@@ -259,7 +259,7 @@ export class LeaveRequestServicesImp implements LeaveRequestServices {
       );
 
       this.mail.sendEmail({
-        to: employee.userId,
+        to: employee.userid,
         subject: `Leave Request ${leaveRequest.status}`,
         text: `Hi, \n${employee.name}, your leave request from ${leaveRequest.startDate} to ${leaveRequest.endtDate}.\nTotaling ${leaveRequest.hours_off_requeted} ours requested. Has benn ${leaveRequest.status}  \nBest regards,`,
       });
@@ -271,13 +271,12 @@ export class LeaveRequestServicesImp implements LeaveRequestServices {
 
   private getManagers = async (sector: Sector): Promise<string> => {
     try {
-      // const employeeServices: EmployeeServices = new EmployeeServicesImp();
       const employee: Employee[] = await this.employeeServices.getManagers(
         sector
       );
 
       const to: string = employee.reduce((to: string, aEmployee: Employee) => {
-        return to + `, ${aEmployee.userId}`;
+        return to + `, ${aEmployee.userid}`;
       }, "");
 
       return to;

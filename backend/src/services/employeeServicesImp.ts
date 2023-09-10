@@ -65,6 +65,26 @@ export class EmployeeServicesImp implements EmployeeServices {
     }
   };
 
+  public isManager = async (id: number): Promise<boolean> => {
+    try {
+      const { data, error }: PostgrestResponse<Employee> = await supabase
+        .from("Employee")
+        .select("*")
+        .eq("id", id);
+
+      if (error) {
+        console.error(`Error trying to get data from Employee":`, error);
+        return null;
+      } else {
+
+        return data.length == 0? false: data[0].position_name === parseInt(process.env.MANAGER);
+      }
+    } catch (error) {
+      console.error(`Error trying to get data from Employee":`, error);
+      return null;
+    }
+  };
+
   public getAEmployeeByUserId = async (
     userId: string
   ): Promise<Employee | null> => {

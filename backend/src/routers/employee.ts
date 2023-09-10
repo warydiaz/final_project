@@ -16,9 +16,9 @@ router.get(
 );
 
 router.post(
-  "/",  
+  "/",
   errorChecked(async (req, res) => {
-    const employeeData = req.body
+    const employeeData = req.body;
     const anEmployee: Employee = new Employee(
       employeeData.userid,
       employeeData.name,
@@ -35,9 +35,9 @@ router.post(
 );
 
 export interface RequestWithEmployeeId extends Request {
-    params: { id: any; };
-    body: any;
-    employeeId: number;
+  params: { id: any };
+  body: any;
+  employeeId: number;
 }
 
 router.use("userid/:userid", async (req: Request, res, next) => {
@@ -52,19 +52,28 @@ router.use("/:id", async (req: RequestWithEmployeeId, res, next) => {
   next();
 });
 
-
 router.post(
   "/:userid",
   errorChecked(async (req: Request, res) => {
-    const employee = await employeeServicesQuery.getAEmployeeByUserId(req.body.userid);
+    const employee = await employeeServicesQuery.getAEmployeeByUserId(
+      req.body.userid
+    );
     res.status(200).json(employee);
+  })
+);
+
+router.get(
+  "/ismanager/:id",
+  errorChecked(async (req: RequestWithEmployeeId, res) => {
+    const isManager = await employeeServicesQuery.isManager(req.params.id);
+    res.status(200).json({ ismanager: isManager });
   })
 );
 
 router.get(
   "/:id",
   errorChecked(async (req: RequestWithEmployeeId, res) => {
-    const employee = await employeeServicesQuery.getAEmployee(req.employeeId)
+    const employee = await employeeServicesQuery.getAEmployee(req.employeeId);
     res.status(200).json(employee);
   })
 );
@@ -72,7 +81,10 @@ router.get(
 router.put(
   "/:id",
   errorChecked(async (req: RequestWithEmployeeId, res) => {
-    const updatedEmployee = await employeeServicesQuery.updateAEmployee(req.employeeId, req.body);
+    const updatedEmployee = await employeeServicesQuery.updateAEmployee(
+      req.employeeId,
+      req.body
+    );
     res.status(200).json(updatedEmployee);
   })
 );
@@ -80,7 +92,9 @@ router.put(
 router.delete(
   "/:id",
   errorChecked(async (req: RequestWithEmployeeId, res) => {
-    const deletedEmployee = await employeeServicesQuery.deleteAEmployee(req.employeeId)
+    const deletedEmployee = await employeeServicesQuery.deleteAEmployee(
+      req.employeeId
+    );
     res.status(200).json(deletedEmployee);
   })
 );

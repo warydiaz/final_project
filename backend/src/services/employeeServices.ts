@@ -5,6 +5,7 @@ export interface EmployeeServices {
   getAEmployee(id: Number): Promise<Employee>;
   getAEmployeeByUserId(UserId: string): Promise<Employee>;
   getManagers(sector: Sector): Promise<Employee[]>;
+  isManager(id:number):Promise<boolean>;
   updateAEmployee(id: number, updatedData: Partial<Employee>): Promise<boolean>;
   deleteAEmployee(id: number): Promise<boolean>;
   createAEmployee(employee: Employee): Promise<Employee>;

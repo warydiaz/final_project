@@ -443,3 +443,20 @@ export const updateAHolidaysType = async (
     throw error;
   }
 };
+
+export const isManager = async (
+  id: number
+): Promise<boolean> => {
+  try {
+    const responseIsManager = await axios.get(
+      `${API_URL}/employee/ismanager/${id}`
+    );
+
+    const manager: boolean = responseIsManager.data.ismanager;
+
+    return manager;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+};

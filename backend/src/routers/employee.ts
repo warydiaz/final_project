@@ -63,9 +63,9 @@ router.post(
 );
 
 router.get(
-  "/ismanager/:id",
-  errorChecked(async (req: RequestWithEmployeeId, res) => {
-    const isManager = await employeeServicesQuery.isManager(req.params.id);
+  "/ismanager/:userid",
+  errorChecked(async (req: Request, res) => {
+    const isManager = await employeeServicesQuery.isManager(req.params.userid);
     res.status(200).json({ ismanager: isManager });
   })
 );

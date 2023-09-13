@@ -56,16 +56,18 @@ function LeaveRequest() {
  
     const jsonData = await fetchLeaveRequest(useridFetcData);
 
-    const jsonDataProceced = jsonData.map((item) => ({
-      id: item.id,
-      employeeId: item.employeeId,
-      start_date: new Date(item.start_date).toLocaleDateString(),
-      end_date: new Date(item.end_date).toLocaleDateString(),
-      hours_off_requested: item.hours_off_requested,
-      status: item.status,
-    }));
-
-    setData(jsonDataProceced);
+    if (jsonData) {
+      const jsonDataProceced = jsonData.map((item) => ({
+        id: item.id,
+        employeeId: item.employeeId,
+        start_date: new Date(item.start_date).toLocaleDateString(),
+        end_date: new Date(item.end_date).toLocaleDateString(),
+        hours_off_requested: item.hours_off_requested,
+        status: item.status,
+      }));
+  
+      setData(jsonDataProceced); 
+    }
   };
 
   const openPopupAddLeaveRequest = () => {

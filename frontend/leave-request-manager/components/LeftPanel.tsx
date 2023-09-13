@@ -1,15 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import {
-  User,
-  createClientComponentClient,
-} from "@supabase/auth-helpers-nextjs";
+import {createClientComponentClient} from "@supabase/auth-helpers-nextjs";
 import EmployeeLeftPanel from "./EmployeeLeftPanel";
 import MyTeamLeaveRequestLeftPanel from "./MyTeamleaveRequestLeftPanel";
 import SectorLeftPanel from "./Sector_positionLeftPanel";
 import HolidaysTypeLeftPanel from "./holidaysTypeLeftPanel";
 import LeaveRequestLeftPanel from "./leaveRequestLeftPanel";
-import { isManager, fetchAEmployeeByUserId } from "@/services/api";
+import { isManager } from "@/services/api";
 
 export default function LeftPanel() {
   const [manager, setManager] = useState(false);
@@ -24,16 +21,9 @@ export default function LeftPanel() {
     return data.user;
   };
 
-  const getId = async (userId: string): Promise<number> => {
-    const exist = await fetchAEmployeeByUserId(userId);
-
-    return exist.id;
-  };
-
   const fetchData = async () => {
     const userFetcData = await getUser();
-    const useridFetcData = await getId(userFetcData.email);
-    const fetchIsManager = await isManager(useridFetcData);
+    const fetchIsManager = await isManager(userFetcData.email);
   
     setManager(fetchIsManager);
   };

@@ -145,7 +145,7 @@ function LeaveRequest() {
               <td className="px-4 py-2">{item.end_date}</td>
               <td className="px-4 py-2">{item.hours_off_requested}</td>
               <td className="px-4 py-2">{item.status}</td>
-              <td className="flex flex-row px-4 py-2 justify-center">
+              {item.status == "Requested" && <td className="flex flex-row px-4 py-2 justify-center">
                 <div className="m-4 cursor-pointer">
                   <Image
                     src={Pencil}
@@ -164,7 +164,7 @@ function LeaveRequest() {
                 >
                   <Image src={Trash} alt="Trash Icon" width={20} height={20} />
                 </div>
-              </td>
+              </td>}
             </tr>
           ))}
         </tbody>

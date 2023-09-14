@@ -51,7 +51,7 @@ export default function UpdateLeaveRequest({
       setError(true);
       return;
     }
-
+   
     const updated = await updateALeaveRequest(
       id,
       startDate,
@@ -113,8 +113,16 @@ export default function UpdateLeaveRequest({
             <input
               type="number"
               value={hoursOffRequested}
-              onChange={(e) => setHoursOffRequested(parseFloat(e.target.value))}
-              className="border"
+              onChange={(e) => {
+                const hour = parseFloat(e.target.value);
+                if (hour > 0) {
+                  setHoursOffRequested(parseFloat(e.target.value));
+                  setError(false);
+                } else {
+                  setError(true);
+                }
+              }}
+              className="border py-2 px-4"
             />
           </label>
 

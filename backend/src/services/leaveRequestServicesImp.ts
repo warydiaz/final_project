@@ -242,7 +242,7 @@ export class LeaveRequestServicesImp implements LeaveRequestServices {
       this.mail.sendEmail({
         to: to,
         subject: `Leave Request for ${employee.name}`,
-        text: `Hi, \n${employee.name}, has requested a leave from ${leaveRequest.startDate} to ${leaveRequest.endtDate}.\nTotaling ${leaveRequest.hours_off_requeted} ours requested. \nBest regards,`,
+        text: `Hi, \n${employee.name}, has requested a leave from ${leaveRequest.startDate} to ${leaveRequest.endtDate}. Totaling ${leaveRequest.hours_off_requeted} ours requested. Best regards,`,
       });
     } catch (error) {
       console.error(`Error getting employee:`, error);
@@ -251,7 +251,7 @@ export class LeaveRequestServicesImp implements LeaveRequestServices {
   };
 
   private sendEmailWhenALeaveRequestIsUpdated = async (
-    leaveRequest: LeaveRequest
+    leaveRequest: any
   ) => {
     try {
       const employee: Employee = await this.employeeServices.getAEmployee(
@@ -261,7 +261,7 @@ export class LeaveRequestServicesImp implements LeaveRequestServices {
       this.mail.sendEmail({
         to: employee.userid,
         subject: `Leave Request ${leaveRequest.status}`,
-        text: `Hi, \n${employee.name}, your leave request from ${leaveRequest.startDate} to ${leaveRequest.endtDate}.\nTotaling ${leaveRequest.hours_off_requeted} ours requested. Has benn ${leaveRequest.status}  \nBest regards,`,
+        text: `Hi, ${employee.name}, \nyour leave request from ${leaveRequest.start_date} to ${leaveRequest.end_date}. Totaling ${leaveRequest.hours_off_requested} ours requested. Has benn ${leaveRequest.status}  \nBest regards,`,
       });
     } catch (error) {
       console.error(`Error getting employee:`, error);
@@ -276,9 +276,11 @@ export class LeaveRequestServicesImp implements LeaveRequestServices {
       );
 
       const to: string = employee.reduce((to: string, aEmployee: Employee) => {
-        return to + `, ${aEmployee.userid}`;
+        if (to.length > 0) {
+          return to + `, ${aEmployee.userid}`;
+        }
+        return `${aEmployee.userid}`;
       }, "");
-
       return to;
     } catch (error) {
       console.error(`Error getting Managers:`, error);

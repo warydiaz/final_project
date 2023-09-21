@@ -3,7 +3,7 @@ import { Position } from './types';
 
 interface DropdownProps {
   data: Position[];
-  selectedId?: number; 
+  selectedId?: number;
   onSelect: (selectedItem: Position) => void;
 }
 
@@ -14,6 +14,7 @@ export default function DropDownPosition({
 }: DropdownProps) {
   const [selectedItem, setSelectedItem] = useState<Position | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [zIndex, setZIndex] = useState(1);
 
   const handleSelect = (item: Position) => {
     setSelectedItem(item);
@@ -23,6 +24,11 @@ export default function DropDownPosition({
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
+    if (!isOpen) {
+      setZIndex(2);
+    } else {
+      setZIndex(1);
+    }
   };
 
   const handleItemMouseDown = (event: React.MouseEvent<HTMLLIElement>) => {
@@ -54,7 +60,10 @@ export default function DropDownPosition({
         {selectedItem ? selectedItem.name : 'Select a Position'}
       </button>
       {isOpen && (
-        <ul className="absolute w-full py-2 mt-1 space-y-1 bg-white border rounded shadow-sm">
+        <ul
+          className="absolute w-full py-2 mt-1 space-y-1 bg-white border rounded shadow-sm"
+          style={{ zIndex: zIndex }}
+        >
           {data.map((item) => (
             <li
               key={item.id}

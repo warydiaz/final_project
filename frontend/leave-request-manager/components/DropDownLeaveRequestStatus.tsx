@@ -11,6 +11,7 @@ export default function DropDownLeaveRequestStatus({
 }: DropdownProps) {
   const [selectedStatud, setSelectedStatud] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [zIndex, setZIndex] = useState(1);
   const data = ["Requested", "Approved", "Rejected"];
 
   const handleSelect = (item: string) => {
@@ -21,6 +22,11 @@ export default function DropDownLeaveRequestStatus({
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
+    if (!isOpen) {
+      setZIndex(2);
+    } else {
+      setZIndex(1);
+    }
   };
 
   const handleItemMouseDown = (event: React.MouseEvent<HTMLLIElement>) => {
@@ -54,7 +60,10 @@ export default function DropDownLeaveRequestStatus({
         {selectedStatud ? selectedStatud : "Select a Status"}
       </button>
       {isOpen && (
-        <ul className="absolute w-full py-2 mt-1 space-y-1 bg-white border rounded shadow-sm">
+          <ul
+          className="absolute w-full py-2 mt-1 space-y-1 bg-white border rounded shadow-sm"
+          style={{ zIndex: zIndex }}
+        >
           {data.map((item) => (
             <li
               key={item}

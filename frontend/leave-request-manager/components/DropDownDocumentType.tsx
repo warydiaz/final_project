@@ -3,7 +3,7 @@ import { DocumentType } from './types';
 
 interface DropdownProps {
   data: DocumentType[];
-  selectedId?: number; 
+  selectedId?: number;
   onSelect: (selectedItem: DocumentType) => void;
 }
 
@@ -14,6 +14,7 @@ export default function DropDownDocumentType({
 }: DropdownProps) {
   const [selectedItem, setSelectedItem] = useState<DocumentType | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [zIndex, setZIndex] = useState(1);
 
   const handleSelect = (item: DocumentType) => {
     setSelectedItem(item);
@@ -23,6 +24,11 @@ export default function DropDownDocumentType({
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
+    if (!isOpen) {
+      setZIndex(2);
+    } else {
+      setZIndex(1);
+    }
   };
 
   const handleItemMouseDown = (event: React.MouseEvent<HTMLLIElement>) => {
@@ -54,7 +60,10 @@ export default function DropDownDocumentType({
         {selectedItem ? selectedItem.name : 'Select a Document Type'}
       </button>
       {isOpen && (
-        <ul className="absolute w-full py-2 mt-1 space-y-1 bg-white border rounded shadow-sm">
+        <ul
+          className="absolute w-full py-2 mt-1 space-y-1 bg-white border rounded shadow-sm"
+          style={{ zIndex: zIndex }}
+        >
           {data.map((item) => (
             <li
               key={item.id}

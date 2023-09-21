@@ -7,6 +7,8 @@ import AddHolidaysType from "./AddHolidaysType";
 import UpdateHolidaysType from "./UpdateHolidaysType";
 import { HolidaysType } from "./types";
 import { fetchHolidaysType, deleteAHolidayType } from "@/services/api";
+import { isManager } from "@/services/api";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 function HolidaysType() {
   const [data, setData] = useState<HolidaysType[]>([]);
@@ -17,6 +19,9 @@ function HolidaysType() {
   const [holidaysTypeCountry, setHolidaysTypeCountry] = useState("");
   const [amountOfDaysOff, setAmountOfDaysOff] = useState(0);
   const [nameOfHolidaysType, setNameOfHolidaysType] = useState("");
+  const [manager, setManager] = useState(false);
+  
+  const supabase = createClientComponentClient();
 
   const openPopupAddHolidaysType = () => {
     setshowPopupAddHolidaysType(true);
@@ -42,7 +47,16 @@ function HolidaysType() {
     fetchData();
   }, []);
 
+  const getUser = async () => {
+    const { data, error } = await supabase.auth.getUser();
+    return data.user;
+  };
+
   const fetchData = async () => {
+    const userFetcData = await getUser();
+    const fetchIsManager = await isManager(userFetcData.email);
+    setManager(fetchIsManager);
+
     const jsonData = await fetchHolidaysType();
     setData(jsonData);
   };
@@ -61,14 +75,14 @@ function HolidaysType() {
     <div className="flex flex-col ml-8 mr-8 w-10/12 ">
       <h1 className="text-2xl font-bold m-4">List of Holidays Types</h1>
 
-      <button
+      {manager && <button
         className="bg-lime-600 text-white py-1 px-3 rounded w-52"
         onClick={() => {
           openPopupAddHolidaysType();
         }}
       >
         Add
-      </button>
+      </button>}
 
       {showPopupAddHolidaysType && (
         <AddHolidaysType
@@ -109,7 +123,7 @@ function HolidaysType() {
                 <td className="px-4 py-2">{item.country}</td>
                 <td className="px-4 py-2">{item.amount_of_days_off}</td>
                 <td className="px-4 py-2">{item.name}</td>
-                <td className="flex flex-row px-4 py-2 justify-center">
+                {manager && <td className="flex flex-row px-4 py-2 justify-center">
                   <div
                     className="m-4 cursor-pointer"
                     onClick={() => {
@@ -128,7 +142,7 @@ function HolidaysType() {
                   >
                     <Image src={Trash} alt="Trash Icon" width={20} height={20} />
                   </div>
-                </td>
+                </td>}
               </tr>
             ))}
           </tbody>

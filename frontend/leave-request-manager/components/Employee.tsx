@@ -7,6 +7,8 @@ import AddEmployee from "./AddEmployee";
 import { Employee, Sector } from "./types";
 import UpdateEmployee from "./UpdateEmployee";
 import { fetchEmployees, fetchSectors, deleteAEmployee } from "@/services/api";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { isManager } from "@/services/api";
 
 function Employee() {
   const [data, setData] = useState<Employee[]>([]);
@@ -15,14 +17,26 @@ function Employee() {
   const [showPopupAddEmployee, setshowPopupAddEmployee] = useState(false);
   const [showPopupUpdateEmployee, setshowPopupUpdateEmployee] = useState(false);
   const [employeeIdToUpdate, setEmployeeIdToUpdate] = useState(0);
+  const [manager, setManager] = useState(false);
+
+  const supabase = createClientComponentClient();
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
+    const userFetcData = await getUser();
+    const fetchIsManager = await isManager(userFetcData.email);
+    setManager(fetchIsManager);
+
     await getSectors();
     await getEmployees();
+  };
+
+  const getUser = async () => {
+    const { data, error } = await supabase.auth.getUser();
+    return data.user;
   };
 
   const getEmployees = async () => {
@@ -76,14 +90,14 @@ function Employee() {
     <div className="flex flex-col ml-8 mr-8 w-10/12 ">
       <h1 className="text-2xl font-bold m-4">List of Employees</h1>
 
-      <button
+      {manager && <button
         className="bg-lime-600 text-white py-1 px-3 rounded w-52"
         onClick={() => {
           openPopupAddEmployee();
         }}
       >
         Add
-      </button>
+      </button>}
 
       {error && (
         <div className="text-red-600 font-bold">Error deleting Employee.</div>
@@ -103,7 +117,7 @@ function Employee() {
 
       <div className="overflow-auto max-h80">
         <table className="table-auto w-full">
-        <thead className="sticky top-0 bg-white">
+          <thead className="sticky top-0 bg-white">
             <tr className="">
               <th className="px-4 py-2">Name</th>
               <th className="px-4 py-2">Sector</th>
@@ -118,7 +132,7 @@ function Employee() {
                   {getNameSector(item.employee_Sector)}
                 </td>
                 <td className="px-4 py-2">{item.userid}</td>
-                <td
+                {manager && <td
                   className="flex flex-row px-4 py-2 justify-center"
                   onClick={() => {
                     setEmployeeIdToUpdate(item.id);
@@ -128,15 +142,15 @@ function Employee() {
                   <div className="m-4 cursor-pointer">
                     <Image src={Pencil} alt="Edit Icon" width={20} height={20} />
                   </div>
-                </td>
-                <td>
+                </td>}
+                {manager && <td>
                   <div
                     className="m-4 cursor-pointer"
                     onClick={() => deleteEmployee(item.id)}
                   >
                     <Image src={Trash} alt="Trash Icon" width={20} height={20} />
                   </div>
-                </td>
+                </td>}
               </tr>
             ))}
           </tbody>

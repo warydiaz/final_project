@@ -8,12 +8,14 @@ import UpdateSector from "./UpdateSector";
 import { Sector, Position } from "./types";
 import AddPosition from "./AddPosition";
 import UpdatePosition from "./UpdatePosition";
+import { isManager } from "@/services/api";
 import {
   fetchSectors,
   fetchPositions,
   deleteASector,
   deleteAPosition,
 } from "@/services/api";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 function Sector() {
   const [dataSections, setDataSections] = useState<Sector[]>([]);
@@ -28,6 +30,9 @@ function Sector() {
   const [showPopupUpdatePosition, setshowPopupUpdatePosition] = useState(false);
   const [positionIdToUpdate, setPositionIdToUpdate] = useState(0);
   const [positionNameToUpdate, setPositionNameToUpdate] = useState("");
+  const [manager, setManager] = useState(false);
+  
+  const supabase = createClientComponentClient();
 
   const openPopupAddSector = () => {
     setshowPopupAddSector(true);
@@ -49,7 +54,16 @@ function Sector() {
     fetchData();
   }, []);
 
+  const getUser = async () => {
+    const { data, error } = await supabase.auth.getUser();
+    return data.user;
+  };
+
   const fetchData = async () => {
+    const userFetcData = await getUser();
+    const fetchIsManager = await isManager(userFetcData.email);
+    setManager(fetchIsManager);
+
     getSections();
     getPositions();
   };
@@ -103,7 +117,7 @@ function Sector() {
       <div className="flex flex-col ml-8 mr-8">
         <h1 className="text-2xl font-bold m-4">List of Sectors</h1>
 
-        <button
+        {manager && <button
           className="bg-lime-600 text-white py-1 px-3 rounded w-52"
           onClick={() => {
             openPopupAddSector();
@@ -111,7 +125,7 @@ function Sector() {
           }}
         >
           Add Sector
-        </button>
+        </button>}
 
         {showPopupAddSector && (
           <AddSector onClose={closePopupAddSector} onRefresh={refreshData} />
@@ -138,7 +152,7 @@ function Sector() {
               <div className="grid items-center gap-2">
                 <li>{item.name}</li>
               </div>
-              <div className="flex flex-row px-4 py-2 justify-center">
+              {manager && <div className="flex flex-row px-4 py-2 justify-center">
                 <div
                   className="m-4 cursor-pointer"
                   onClick={() => {
@@ -155,7 +169,7 @@ function Sector() {
                 >
                   <Image src={Trash} alt="Trash Icon" width={20} height={20} />
                 </div>
-              </div>
+              </div>}
             </div>
           ))}
         </ul>
@@ -163,14 +177,14 @@ function Sector() {
       <div className="flex flex-col ml-8 mr-8">
         <h1 className="text-2xl font-bold m-4">List of Positions</h1>
 
-        <button
+        {manager && <button
           className="bg-lime-600 text-white py-1 px-3 rounded w-52"
           onClick={() => {
             openPopupAddPosition();
             refreshData();
           }}>
           Add Position
-        </button>
+        </button>}
 
         {showPopupAddPosition && (
           <AddPosition
@@ -200,7 +214,7 @@ function Sector() {
               <div className="grid items-center gap-2">
                 <li>{item.name}</li>
               </div>
-              <div className="flex flex-row px-4 py-2 justify-center">
+              {manager && <div className="flex flex-row px-4 py-2 justify-center">
                 <div
                   className="m-4 cursor-pointer"
                   onClick={() => {
@@ -217,7 +231,7 @@ function Sector() {
                 >
                   <Image src={Trash} alt="Trash Icon" width={20} height={20} />
                 </div>
-              </div>
+              </div>}
             </div>
           ))}
         </ul>

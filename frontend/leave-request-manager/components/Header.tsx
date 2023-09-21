@@ -12,5 +12,3 @@ export default function Header() {
     </header>
   );
 }
-
-{/* <div className="flex items-center border p-4 rounded text-center m-4 hover:shadow-md"> */}

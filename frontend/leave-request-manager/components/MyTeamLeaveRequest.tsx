@@ -15,8 +15,7 @@ import {
 function MyTeamLeaveRequest() {
   const [data, setData] = useState<any[]>([]);
   const [error, setError] = useState<boolean>(false);
-  const [showPopupUpdateLeaveRequest, setshowPopupUpdateLeaveRequest] =
-    useState(false);
+  const [showPopupUpdateLeaveRequest, setshowPopupUpdateLeaveRequest] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [id, setId] = useState(0);
   const [leaveRequestId, setLeaveRequestId] = useState(0);
@@ -76,7 +75,7 @@ function MyTeamLeaveRequest() {
   };
 
   return (
-    <div className="flex flex-col ml-8 mr-8 w-10/12 ">
+    <div className="flex flex-col ml-8 mr-8 w-10/12">
       <h1 className="text-2xl font-bold m-4">
         List of Leave Request of My Team
       </h1>
@@ -109,42 +108,44 @@ function MyTeamLeaveRequest() {
         />
       )}
 
-      <table className="table-auto">
-        <thead>
-          <tr className="">
-            <th className="px-4 py-2">Name</th>
-            <th className="px-4 py-2">Start Date</th>
-            <th className="px-4 py-2">End Date</th>
-            <th className="px-4 py-2">Hours off Requested</th>
-            <th className="px-4 py-2">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((item, index) => (
-            <tr key={item.id} className="border text-center">
-              <td className="px-4 py-2">{item.name}</td>
-              <td className="px-4 py-2">{item.start_date}</td>
-              <td className="px-4 py-2">{item.end_date}</td>
-              <td className="px-4 py-2">{item.hours_off_requested}</td>
-              <td className="px-4 py-2">{item.status}</td>
-              <td className="flex flex-row px-4 py-2 justify-center">
-                <div className="m-4 cursor-pointer">
-                  <Image
-                    src={Pencil}
-                    alt="Edit Icon"
-                    width={20}
-                    height={20}
-                    onClick={() => {
-                      setshowPopupUpdateLeaveRequest(true);
-                      setLeaveRequestId(item.id);
-                    }}
-                  />
-                </div>
-              </td>
+      <div className="overflow-auto max-h80">
+        <table className="table-auto w-full">
+          <thead className="sticky top-0 bg-white">
+            <tr className="">
+              <th className="px-4 py-2">Name</th>
+              <th className="px-4 py-2">Start Date</th>
+              <th className="px-4 py-2">End Date</th>
+              <th className="px-4 py-2">Hours off Requested</th>
+              <th className="px-4 py-2">Status</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data.map((item, index) => (
+              <tr key={item.id} className="border text-center">
+                <td className="px-4 py-2">{item.name}</td>
+                <td className="px-4 py-2">{item.start_date}</td>
+                <td className="px-4 py-2">{item.end_date}</td>
+                <td className="px-4 py-2">{item.hours_off_requested}</td>
+                <td className="px-4 py-2">{item.status}</td>
+                <td className="flex flex-row px-4 py-2 justify-center">
+                  <div className="m-4 cursor-pointer">
+                    <Image
+                      src={Pencil}
+                      alt="Edit Icon"
+                      width={20}
+                      height={20}
+                      onClick={() => {
+                        setshowPopupUpdateLeaveRequest(true);
+                        setLeaveRequestId(item.id);
+                      }}
+                    />
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

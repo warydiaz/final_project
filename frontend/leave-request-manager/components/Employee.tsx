@@ -7,7 +7,6 @@ import AddEmployee from "./AddEmployee";
 import { Employee, Sector } from "./types";
 import UpdateEmployee from "./UpdateEmployee";
 import { fetchEmployees, fetchSectors, deleteAEmployee } from "@/services/api";
-//import Sector from "./Sector_position";
 
 function Employee() {
   const [data, setData] = useState<Employee[]>([]);
@@ -102,45 +101,47 @@ function Employee() {
         />
       )}
 
-      <table className="table-auto">
-        <thead>
-          <tr className="">
-            <th className="px-4 py-2">Name</th>
-            <th className="px-4 py-2">Sector</th>
-            <th className="px-4 py-2">Email</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((item, index) => (
-            <tr key={item.id} className="border text-center">
-              <td className="px-4 py-2">{item.name}</td>
-              <td className="px-4 py-2">
-                {getNameSector(item.employee_Sector)}
-              </td>
-              <td className="px-4 py-2">{item.userid}</td>
-              <td
-                className="flex flex-row px-4 py-2 justify-center"
-                onClick={() => {
-                  setEmployeeIdToUpdate(item.id);
-                  openPopupUpdateEmployee();
-                }}
-              >
-                <div className="m-4 cursor-pointer">
-                  <Image src={Pencil} alt="Edit Icon" width={20} height={20} />
-                </div>
-              </td>
-              <td>
-                <div
-                  className="m-4 cursor-pointer"
-                  onClick={() => deleteEmployee(item.id)}
-                >
-                  <Image src={Trash} alt="Trash Icon" width={20} height={20} />
-                </div>
-              </td>
+      <div className="overflow-auto max-h80">
+        <table className="table-auto w-full">
+        <thead className="sticky top-0 bg-white">
+            <tr className="">
+              <th className="px-4 py-2">Name</th>
+              <th className="px-4 py-2">Sector</th>
+              <th className="px-4 py-2">Email</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data.map((item, index) => (
+              <tr key={item.id} className="border text-center">
+                <td className="px-4 py-2">{item.name}</td>
+                <td className="px-4 py-2">
+                  {getNameSector(item.employee_Sector)}
+                </td>
+                <td className="px-4 py-2">{item.userid}</td>
+                <td
+                  className="flex flex-row px-4 py-2 justify-center"
+                  onClick={() => {
+                    setEmployeeIdToUpdate(item.id);
+                    openPopupUpdateEmployee();
+                  }}
+                >
+                  <div className="m-4 cursor-pointer">
+                    <Image src={Pencil} alt="Edit Icon" width={20} height={20} />
+                  </div>
+                </td>
+                <td>
+                  <div
+                    className="m-4 cursor-pointer"
+                    onClick={() => deleteEmployee(item.id)}
+                  >
+                    <Image src={Trash} alt="Trash Icon" width={20} height={20} />
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 "use client";
-import React, { FormEventHandler, useState, useEffect } from "react";
+import React, { FormEventHandler, useState } from "react";
 import { AddALeaveRequest } from "../services/api";
 
 interface AddLeaveRequestProps {

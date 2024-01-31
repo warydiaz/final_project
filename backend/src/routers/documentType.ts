@@ -1,6 +1,6 @@
 import { Request, Router } from "express";
 import  DocumentTypeServices  from "../services/documentTypeServices.js";
-import { DocumentTypeServicesImp } from "../services/documentTypeServicesImp.js";
+import { DocumentTypeServicesImp } from "../services/mysqlImp/documentTypeServicesImpMysql.js";
 import { errorChecked } from "../utils.js";
 import  DocumentType  from "../models/documentType.js";
 

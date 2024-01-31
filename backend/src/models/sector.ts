@@ -1,4 +1,4 @@
-export default class Sector {
+export class Sector {
   public id: number | undefined;
   public name: string;
 

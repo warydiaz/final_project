@@ -1,6 +1,6 @@
 import { Request, Router } from "express";
 import LeaveRequestServices from "../services/leaveRequestServices.js";
-import { LeaveRequestServicesImp } from "../services/leaveRequestServicesImp.js";
+import { LeaveRequestServicesImp } from "../services/mysqlImp/leaveRequestServicesImpMysql.js";
 import { errorChecked } from "../utils.js";
 import { LeaveRequest } from "../models/leaveRequest.js";
 

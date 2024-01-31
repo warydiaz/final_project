@@ -1,6 +1,6 @@
 import { Request, Router } from "express";
 import HolidaysTypeServices from "../services/holidaysTypeServices.js";
-import { HolidaysTypeServicesImp } from "../services/holidaysTypeServicesImp.js";
+import { HolidaysTypeServicesImp } from "../services/mysqlImp/holidaysTypeServicesImpMysql.js";
 import { errorChecked } from "../utils.js";
 import HolidaysType from "../models/holidaysType.js";
 

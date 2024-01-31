@@ -1,8 +1,8 @@
 import { Request, Router } from "express";
-import  SectorServices  from "../services/sectorServices.js";
-import { SectorServicesImp } from "../services/sectorServicesImp.js";
+import  {SectorServices}  from "../services/sectorServices.js";
+import { SectorServicesImp } from "../services/mysqlImp/sectorServicesImpMysql.js";
 import { errorChecked } from "../utils.js";
-import  Sector  from "../models/sector.js";
+import  {Sector}  from "../models/sector.js";
 
 const router = Router();
 const sectorServicesQuery: SectorServices = new SectorServicesImp();

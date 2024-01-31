@@ -1,6 +1,6 @@
 import { Request, Router } from "express";
 import  PositionServices  from "../services/positionServices.js";
-import { PositionServicesImp } from "../services/positionServicesImp.js";
+import { PositionServicesImp } from "../services/mysqlImp/positionServicesImpMysql.js";
 import { errorChecked } from "../utils.js";
 import  Position  from "../models/position.js";
 

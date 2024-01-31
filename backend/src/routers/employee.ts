@@ -1,6 +1,6 @@
 import { Request, Router } from "express";
 import { EmployeeServices } from "../services/employeeServices.js";
-import { EmployeeServicesImp } from "../services/employeeServicesImp.js";
+import  EmployeeServicesImp  from "../services/mysqlImp/employeeServicesImpMysql.js";
 import { errorChecked } from "../utils.js";
 import { Employee } from "../models/employee.js";
 

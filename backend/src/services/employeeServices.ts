@@ -1,4 +1,4 @@
-import Sector from "../models/sector.js";
+import {Sector} from "../models/sector.js";
 import { Employee } from "../models/employee.js";
 export interface EmployeeServices {
   getAllEmployee(): Promise<Employee[]>;

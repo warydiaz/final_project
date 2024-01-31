@@ -3,7 +3,7 @@ import LeftPanel from "@/components/LeftPanel";
 import Sector from "@/components/Sector_position";
 export const metadata = {
   title: "Sector & Position",
-  description: "Vistagaming Leave Request Manager",
+  description: "Vistagaming Intranet",
 };
 
 export default function RootLayout({

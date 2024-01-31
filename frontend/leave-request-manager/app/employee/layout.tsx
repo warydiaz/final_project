@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import LeftPanel from "@/components/LeftPanel";
 export const metadata = {
   title: "Employee",
-  description: "Vistagaming Leave Request Manager",
+  description: "Vistagaming Intranet",
 };
 
 export default function RootLayout({

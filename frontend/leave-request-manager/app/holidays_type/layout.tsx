@@ -3,7 +3,7 @@ import LeftPanel from "@/components/LeftPanel";
 import HolidaysType from "@/components/holidaysType";
 export const metadata = {
   title: "Holidays Type",
-  description: "Vistagaming Leave Request Manager",
+  description: "Vistagaming Intranet",
 };
 
 export default function RootLayout({

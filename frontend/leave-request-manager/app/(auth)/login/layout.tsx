@@ -1,6 +1,6 @@
 export const metadata = {
-  title: "Leave Request Manager",
-  description: "Vistagaming Leave Request Manager",
+  title: "Vistagaming Intranet",
+  description: "Vistagaming Intranet",
 }
 
 export default function RootLayout({

@@ -1,13 +1,11 @@
   export interface Sector {
     id: number;
     name: string;
-    created_at: Date;
   }
 
   export interface Position {
     id: number;
     name: string;
-    created_at: Date;
   }
 
 
@@ -16,7 +14,6 @@
     name: string;
     amount_of_days_off: number;
     country: string;
-    created_at: Date;
   }
 
   export interface LeaveRequest {
@@ -41,6 +38,11 @@
   }
 
   export interface DocumentType {
+    id: number;
+    name: string;
+  }
+
+  export interface Report {
     id: number;
     name: string;
   }

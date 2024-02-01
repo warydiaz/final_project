@@ -9,6 +9,7 @@ import leaveRequest from "./routers/leaveRequest.js"
 import documentType from "./routers/documentType.js"
 import position from "./routers/position.js"
 import corsOptions from "./corsConfig.js";
+import report from "./routers/report.js";
 
 //to use the file .env
 dotenv.config();
@@ -28,6 +29,7 @@ app.use("/holidaysType", holidaysType);
 app.use("/leaveRequest", leaveRequest);
 app.use("/documentType", documentType);
 app.use("/position", position);
+app.use("/report", report);
 
 app.listen(process.env.SERVER_PORT,()=>{
     console.log(`API listening on: ${process.env.SERVER_PORT}`);

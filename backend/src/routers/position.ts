@@ -11,6 +11,7 @@ router.get(
   "/",
   errorChecked(async (req, res) => {
     const result = await PositionServicesQuery.getAllPositions();
+    
     res.status(200).json({ Position: result, ok: true });
   })
 );

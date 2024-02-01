@@ -5,6 +5,7 @@ import {
   Employee,
   Position,
   LeaveRequest,
+  Report
 } from "@/components/types";
 import axios from "axios";
 const API_URL = "http://localhost:3001";
@@ -104,10 +105,12 @@ export const fetchDocumetType = async (): Promise<DocumentType[]> => {
 
 export const fetchPositions = async (): Promise<Position[]> => {
   try {
-    const response = await axios.get<{ sector: Position[] }>(
+    const response = await axios.get<{ Position: Position[] }>(
       `${API_URL}/position`
     );
+
     const jsonData: Position[] = response.data.Position;
+    
     return jsonData;
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -178,7 +181,7 @@ export const fetchAEmployee = async (employeeId: number): Promise<Employee> => {
     const response = await axios.get<{ employee: Employee }>(
       `${API_URL}/employee/${employeeId}`
     );
-    const jsonData: Employee = response.data;
+    const jsonData:Employee = response.data.employee;
 
     return jsonData;
   } catch (error) {
@@ -289,7 +292,7 @@ export const updateALeaveRequest = async (
   startDate: string,
   endDate: String,
   hoursOffRequested: number,
-  status?:string
+  status?: string
 ): Promise<boolean> => {
   try {
     const updateLeaveRequestResponse = await axios.put(
@@ -298,7 +301,7 @@ export const updateALeaveRequest = async (
         start_date: startDate,
         end_date: endDate,
         hours_off_requested: hoursOffRequested,
-        status:status
+        status: status
       }
     );
 
@@ -342,13 +345,13 @@ export const fetchLeaveRequest = async (userId: number): Promise<LeaveRequest[]>
   }
 };
 
-export const fetchLeaveRequestByManager = async (userId: number, status:string[]): Promise<any[]> => {
+export const fetchLeaveRequestByManager = async (userId: number, status: string[]): Promise<any[]> => {
   try {
     const fetchLeaveRequestResponse = await axios.post(
       `${API_URL}/leaveRequest/managerid`,
       {
         managerid: userId,
-        status:status
+        status: status
       }
     );
     const jsonData: LeaveRequest[] = fetchLeaveRequestResponse.data;
@@ -445,16 +448,73 @@ export const updateAHolidaysType = async (
 };
 
 export const isManager = async (
-  id: number
+  id: string | null | undefined
 ): Promise<boolean> => {
   try {
-    const responseIsManager = await axios.get(
-      `${API_URL}/employee/ismanager/${id}`
+    if (id != null && id != undefined) {
+      const responseIsManager = await axios.get(
+        `${API_URL}/employee/ismanager/${id}`
+      );
+
+      const manager: boolean = responseIsManager.data.ismanager;
+
+      return manager;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+};
+
+export const fetchReports = async (): Promise<Report[]> => {
+  try {
+    const response = await axios.get<{ report: Report[] }>(`${API_URL}/report`);
+    const jsonData: Report[] = response.data.report;
+    return jsonData;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+};
+
+export const updateAReport = async (
+  reportId: number,
+  report: string
+): Promise<boolean> => {
+  try {
+    const updatedReportResponse = await axios.put(
+      `${API_URL}/report/${reportId}`,
+      { name: report }
     );
+    const wasUpdated: boolean = updatedReportResponse.data;
 
-    const manager: boolean = responseIsManager.data.ismanager;
+    return wasUpdated;
+  } catch (error) {
+    console.error("Error updating Report:", error);
+    throw error;
+  }
+};
 
-    return manager;
+export const addAReport = async (name: string): Promise<boolean> => {
+  try {
+    const addReportResponse = await axios.post(`${API_URL}/report`, {
+      name: name,
+    });
+    const wasAdded: boolean = addReportResponse.data.ok;
+    return wasAdded;
+  } catch (error) {
+    console.error("Error adding data:", error);
+    throw error;
+  }
+};
+
+export const deleteAReport = async (reportId: number): Promise<boolean> => {
+  try {
+    const deleteResponse = await axios.delete(`${API_URL}/report/${reportId}`);
+    const wasDeleted: boolean = deleteResponse.data;
+    return wasDeleted;
   } catch (error) {
     console.error("Error fetching data:", error);
     throw error;

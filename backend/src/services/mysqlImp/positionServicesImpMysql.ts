@@ -9,6 +9,7 @@ export class PositionServicesImp implements PositionServices {
     try {
       const query = 'SELECT * FROM Position';
       const results = await executeQuery(query);
+
       return results;
     } catch (error) {
       console.error(`Error trying to get data from Position:`, error);
